@@ -3,6 +3,11 @@ from django.contrib import admin
 
 from cfgpyventory import LOCAL_ADMIN_URL
 
+from .views import Install
+
+
 urlpatterns = patterns('',
-    url(LOCAL_ADMIN_URL, include(admin.site.urls)),
-)
+                       url(r'^install/',      Install.as_view(), name='shazzam'),
+                       url(LOCAL_ADMIN_URL, include(admin.site.urls)),
+                       )
+
