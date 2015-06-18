@@ -1,3 +1,7 @@
+# inventory/admin.py
 from django.contrib import admin
 
-# Register your models here.
+# from inventory.models import Domain, Environment
+from company.models import Status, Company
+admin.site.register(Status)
+admin.site.register(Company)

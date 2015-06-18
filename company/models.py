@@ -1,16 +1,18 @@
 # company/models.py
-#
+
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
-#
+
 from pyventory.models import UltraModel
-#
+
+
 class Status(UltraModel):
     """
     For status.description use the builtin status.notes
     """
     name = models.CharField(max_length=64, unique=True)
+
 
 class Company(UltraModel):
     """

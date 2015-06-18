@@ -8,6 +8,8 @@ from pyventory.models import UltraModel
 
 from inventory.models import Domain, Environment, Category
 
+from company.models import Company
+
 class Server(UltraModel):
     """
     Physical, virtual, blade, imaginary; whatever form, server.
@@ -17,6 +19,7 @@ class Server(UltraModel):
     environment = models.ForeignKey(Environment)
     resides = models.ForeignKey('Server', null=True)
     category = models.ForeignKey(Category, null=True)
+    company = models.ForeignKey(Company, null=True)
 
     class Meta:
         unique_together = (("name", "domain"),)

@@ -1,35 +1,19 @@
-"""
-Django settings for pyventory project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# pyventory\settings.py
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 import cfgpyventory
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = cfgpyventory.SECRET_KEY
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
+DEBUG = cfgpyventory.DEBUG
+TEMPLATE_DEBUG = cfgpyventory.TEMPLATE_DEBUG
+ALLOWED_HOSTS = cfgpyventory.ALLOWED_HOSTS
+# DATABASES = cfgpyventory.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'pyventory.sqlite3'),
+    }
+}
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -40,6 +24,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'inventory.machine',
     'inventory',
+    'company',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,20 +40,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'pyventory.urls'
 
 WSGI_APPLICATION = 'pyventory.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'pyventory.sqlite3'),
-    }
-}
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -87,4 +58,4 @@ STATICFILES_DIRS = (
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, '_templates'),
-    )
+)
