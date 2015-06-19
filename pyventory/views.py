@@ -28,7 +28,7 @@ def dropall(this):
     """
     Enable/disable of deleting all objects before adding default data.
     """
-    # this.objects.all().delete()
+    this.objects.all().delete()
     return
 
 

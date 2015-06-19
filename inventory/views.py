@@ -28,3 +28,15 @@ class EnvironmentList(generic.ListView):
     """List Environment in Inventory"""
     form_class, model = EnvironmentForm, Environment
     template_name = 'inventory/list.html'
+
+
+class EnvironmentUpdate(generic.UpdateView):
+    """List Environment in Inventory"""
+    form_class, model = EnvironmentForm, Environment
+    template_name = 'inventory/form.html'
+
+
+class EnvironmentCreate(generic.CreateView):
+    """List Environment in Inventory"""
+    form_class, model = EnvironmentForm, Environment
+    template_name = 'inventory/form.html'

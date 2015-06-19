@@ -34,18 +34,24 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block HomeView %}{% endblock %}">
-                            <a class="navbar-brand" href="{ url 'index' %}">Home</a>
+                            <a class="navbar-brand" href="{% url 'home' %}">Home</a>
                         </li>
-                        <li class="dropdown{% block ThisView %}{% endblock %}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ThisView <span class="caret"></span></a>
+                        <li class="dropdown{% block InventoryBlock %}{% endblock %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{ url 'index' %}">list objs</a></li>
-                                <li><a href="{ url 'create' %}">create obj</a></li>
+                                <li><a href="{% url 'inventory:home' %}">Home</a></li>
+                                <li role="separator" class="divider"></li>
+                                <!-- li class="dropdown-header">inventory\domains</li -->
+                                <li><a href="{% url 'inventory:domain:list' %}">Domains</a></li>
+                                <li><a href="{% url 'inventory:domain:create' %}">add</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{% url 'inventory:environment:list' %}">Environments</a></li>
+                                <li><a href="{% url 'inventory:environment:create' %}">add</a></li>
                             </ul>
                         </li>
-                        <li class="{% block ListView %}{% endblock %}">
+                        <!-- li class="{% block ListView %}{% endblock %}">
                             <a href="{ url 'index' %}"> My Lists </a>
-                        </li>
+                        </li -->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {% if user.is_authenticated %}

@@ -4,25 +4,24 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from . import views
 
-domain_patterns = patterns('',
-    url(r'^create$',       views.DomainCreate.as_view(), name='create'),
-    url(r'^$',             views.DomainList.as_view(),   name='list'),
-    url(r'^(?P<pk>\d+)/$', views.DomainUpdate.as_view(), name='update'),
-)
+dom_pat = patterns('',
+                   url(r'^create$',       views.DomainCreate.as_view(), name='create'),
+                   url(r'^$',             views.DomainList.as_view(),   name='list'),
+                   url(r'^(?P<pk>\d+)/$', views.DomainUpdate.as_view(), name='update'),
+                   )
 
-environment_patterns = patterns('',
-    #url(r'^(?P<pk>\d+)/$',        views.EnvironmentDetail.as_view(), name='detail'),
-    #url(r'^(?P<pk>\d+)/update$',  views.EnvironmentUpdate.as_view(), name='update'),
-    #url(r'^create/$',             views.EnvironmentCreate.as_view(), name='create'),
-    url(r'^$',                    views.EnvironmentList.as_view(),   name='list'),
-)
+env_pat = patterns('',
+                   url(r'^(?P<pk>\d+)/$', views.EnvironmentUpdate.as_view(), name='update'),
+                   url(r'^create/$',      views.EnvironmentCreate.as_view(), name='create'),
+                   url(r'^$',             views.EnvironmentList.as_view(),   name='list'),
+                   )
 
 
 urlpatterns = patterns('',
-    url(r'^$', TemplateView.as_view(template_name='inventory/home.html')),
+    url(r'^$', TemplateView.as_view(template_name='inventory/home.html'), name='home'),
     #
-    url(r'^domain/',      include(domain_patterns,      namespace='domain')),      # inventory:<domain>:list
-    url(r'^environment/', include(environment_patterns, namespace='environment')), # inventory:<environment>:list
+    url(r'^domain/',      include(dom_pat, namespace='domain')),      # inventory:<domain>:list
+    url(r'^environment/', include(env_pat, namespace='environment')), # inventory:<environment>:list
 )
 
 

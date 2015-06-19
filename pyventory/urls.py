@@ -12,7 +12,7 @@ urlpatterns = patterns('',
                        #
                        url(r'^install/', Install.as_view(), name='shazzam'),
                        #
-                       # url(r'^$', TemplateView.as_view(template_name='home.html')),
+                       url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
                        #
                        url(LOCAL_ADMIN_URL, include(admin.site.urls)),
                        )

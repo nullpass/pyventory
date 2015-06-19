@@ -1,2 +1,12 @@
-inventory/list.html
-<a href="{% url 'inventory:domain:create' %}">asdf</a>
+{% extends "Root.html" %}
+{% block pagetitle %}inventory/list.html{% endblock pagetitle %}
+
+{% block content %}
+<h1>{{ object_list.first.get_classname }}</h1>
+<ol>
+    {% for this in object_list %}
+        <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+    {% endfor %}
+</ol>
+
+{% endblock %}

@@ -13,7 +13,7 @@ class Domain(UltraModel):
     name = models.CharField(validators=[RegexValidator('^[\-0-9a-z\.]+$')], max_length=254, unique=True)
 
     def get_absolute_url(self):
-        return reverse('inventory:domains:detail', kwargs={'pk': self.id})
+        return reverse('inventory:domain:update', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
         """Force name to be lowercase"""
@@ -26,7 +26,7 @@ class Environment(UltraModel):
     name = models.CharField(validators=[RegexValidator('^[\-\w\.]+$')], max_length=32, unique=True)
 
     def get_absolute_url(self):
-        return reverse('inventory:environments:detail', kwargs={'pk': self.id})
+        return reverse('inventory:environment:update', kwargs={'pk': self.id})
 
 class Category(UltraModel):
     """
