@@ -15,7 +15,6 @@ class RequireUserMixin(object):
             if self.mixin_messages:
                 messages.warning(request, 'Unable to comply, please log in.')
             return redirect('{0}?next={1}'.format(reverse('auth3p'), request.path))
-        #return super(RequireUserMixin, self).dispatch(request, *args, **kwargs)
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -25,7 +24,6 @@ class RequireOwnerMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if self.get_object().user != self.request.user:
             raise Http404
-        #return super(RequireOwnerMixin, self).dispatch(request, *args, **kwargs)
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -43,5 +41,4 @@ class RequireStaffMixin(object):
                 if self.mixin_messages:
                     messages.warning(request, 'Unable to comply, your account is not allowed to use this tool.')
                 return redirect('{0}?next={1}'.format(reverse('human:index'), request.path))
-        #return super(RequireStaffMixin, self).dispatch(request, *args, **kwargs)
         return super().dispatch(request, *args, **kwargs)

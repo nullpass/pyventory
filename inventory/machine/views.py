@@ -12,12 +12,12 @@ class Index(generic.TemplateView):
 
 class Create(generic.CreateView):
     form_class, model = ServerForm, Server
-    template_name = 'inventory/machine/create.html'
+    template_name = 'inventory/machine/form.html'
 
 
 class Detail(generic.UpdateView):
     form_class, model = ServerForm, Server
-    template_name = 'inventory/machine/detail.html'
+    template_name = 'inventory/machine/form.html'
 
 
 class List(generic.ListView):
@@ -27,4 +27,4 @@ class List(generic.ListView):
 
 class Update(generic.UpdateView):
     form_class, model = ServerForm, Server
-    template_name = 'inventory/machine/update.html'
+    template_name = 'inventory/machine/form.html'

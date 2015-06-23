@@ -6,7 +6,9 @@ from django.core.validators import RegexValidator
 
 from pyventory.models import UltraModel
 
-from inventory.models import Domain, Environment, Category
+from inventory.environment.models import Environment
+from inventory.domain.models import Domain
+from inventory.category.models import Category
 
 from company.models import Company
 
@@ -31,7 +33,7 @@ class Server(UltraModel):
         """Force name to be lowercase"""
         self.name = self.name.lower()
         #super(Server, self).save(*args, **kwargs)
-        return super().save()
+        return super().save(*args, **kwargs)
 
     def fqdn(self):
         return '{0}.{1}'.format(self.name, self.domainname)

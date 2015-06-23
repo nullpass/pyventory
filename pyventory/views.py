@@ -58,13 +58,14 @@ class Install(RequireStaffMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this, name='prod.example.tld', notes='Example.tld\'s production servers.')
                     inject(this, name='dev.example.tld', notes='dev servers for example.tld')
+                    inject(this, name='prod.corp', notes='Our production infrastructure.')
                     good(self, this)
                 #
                 this = inventory.models.Environment
                 dropall(this)
                 if not this.objects.all():
                     inject(this, name='PROD', notes='Production, all changes require approved change control request.')
-                    inject(this, name='DEV', notes='Devlopment, check with Dave before bouncing servers/apps.')
+                    inject(this, name='DEV', notes='Development, check with Dave before bouncing servers/apps.')
                     good(self, this)
                 #
                 this = inventory.machine.models.Server
@@ -91,7 +92,7 @@ class Install(RequireStaffMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this, name='PRE', notes='Pre-contract client, all work must be approved by VP.')
                     inject(this, name='Active', notes='Active client.')
-                    inject(this, name='Decommisioned', notes='Previous client.')
+                    inject(this, name='Decommissioned', notes='Previous client.')
                     good(self, this)
                 #
                 this = company.models.Company
@@ -102,7 +103,7 @@ class Install(RequireStaffMixin, generic.TemplateView):
                     inject(this, name='Web Cam Group', notes='unsigned contract on table',
                            status=company.models.Status.objects.get(name='PRE'))
                     inject(this, name='Illegal Activities Inc.', notes='Banned in 1999',
-                           status=company.models.Status.objects.get(name='Decommisioned'))
+                           status=company.models.Status.objects.get(name='Decommissioned'))
                     good(self, this)
                 #
                 """

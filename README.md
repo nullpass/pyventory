@@ -6,6 +6,4 @@ Pyventory - A Django suite
 * Everything!
 
 ### TODO:
-* Generic views for inventory objects.
-* Server.fqdn(); check DNS
 * Get human/recent/core from all apps and send them to git as new repo. 
