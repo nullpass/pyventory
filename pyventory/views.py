@@ -44,7 +44,7 @@ class Install(RequireStaffMixin, generic.TemplateView):
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':
             print(';')
             try:
-                this = inventory.models.Category
+                this = inventory.category.models.Category
                 dropall(this)
                 if not this.objects.all():
                     inject(this, name='physical')
