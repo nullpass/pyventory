@@ -53,7 +53,7 @@ class Install(RequireStaffMixin, generic.TemplateView):
                     inject(this, name='imaginary')
                     good(self, this)
                 #
-                this = inventory.models.Domain
+                this = inventory.domain.models.Domain
                 dropall(this)
                 if not this.objects.all():
                     inject(this, name='prod.example.tld', notes='Example.tld\'s production servers.')
@@ -61,7 +61,7 @@ class Install(RequireStaffMixin, generic.TemplateView):
                     inject(this, name='prod.corp', notes='Our production infrastructure.')
                     good(self, this)
                 #
-                this = inventory.models.Environment
+                this = inventory.environment.models.Environment
                 dropall(this)
                 if not this.objects.all():
                     inject(this, name='PROD', notes='Production, all changes require approved change control request.')
@@ -73,17 +73,17 @@ class Install(RequireStaffMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this,
                            name='mail01',
-                           domain=inventory.models.Domain.objects.get(name='prod.example.tld'),
-                           environment=inventory.models.Environment.objects.get(name='PROD'),
-                           category=inventory.models.Category.objects.get(name='physical'),
-                           company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
+                           domain=inventory.domain.models.Domain.objects.get(name='prod.example.tld'),
+                           environment=inventory.environment.models.Environment.objects.get(name='PROD'),
+                           category=inventory.category.models.Category.objects.get(name='physical'),
+                           # company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
                            )
                     inject(this,
                            name='mail01',
-                           domain=inventory.models.Domain.objects.get(name='dev.example.tld'),
-                           environment=inventory.models.Environment.objects.get(name='DEV'),
-                           category=inventory.models.Category.objects.get(name='virtual'),
-                           company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
+                           domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
+                           environment=inventory.environment.models.Environment.objects.get(name='DEV'),
+                           category=inventory.category.models.Category.objects.get(name='virtual'),
+                           # company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
                            )
                     good(self, this)
                 #

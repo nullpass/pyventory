@@ -1,4 +1,4 @@
-Pyventory - A Django suite
+Pyventory - A pet project that's currently 100% broken. :)
 =============================================================
 **Uses Python 3.4 and Django 1.7**
 
