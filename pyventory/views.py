@@ -44,6 +44,15 @@ class Install(RequireStaffMixin, generic.TemplateView):
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':
             print(';')
             try:
+                #
+                this = inventory.application.models.Application
+                dropall(this)
+                if not this.objects.all():
+                    inject(this, name='monitoring.example.tld', notes='Bob\'s dumb naaaagios servers.')
+                    inject(this, name='wiki.example.tld', notes='Internal Documentation website')
+                    inject(this, name='vpn.prod.corp', notes='Employee VPN site. Notify DSD _and_ JC of any outages.')
+                    good(self, this)
+                #
                 this = inventory.category.models.Category
                 dropall(this)
                 if not this.objects.all():

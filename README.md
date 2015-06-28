@@ -7,3 +7,5 @@ Pyventory - A pet project that's currently 100% broken. :)
 
 ### TODO:
 * Get human/recent/core from all apps and send them to git as new repo. 
+* Inventory objects will need detail views and more heart later on.
+
