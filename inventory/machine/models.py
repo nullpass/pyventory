@@ -27,7 +27,7 @@ class Server(UltraModel):
         unique_together = (("name", "domain"),)
 
     def get_absolute_url(self):
-        return reverse('inventory:servers:detail', kwargs={'pk': self.id})
+        return reverse('inventory:machine:server:update', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
         """Force name to be lowercase"""

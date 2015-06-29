@@ -8,12 +8,12 @@ from . import views
 
 ser_pat = patterns('',
                    # /inventory/servers/filter/'needle'/  where needle == 'environment|company[slug]'
-                   url(r'^filter/(?P<needle>[\w-]+)/$',     'inventory.views.ServerFilterView', name='filter'),
+                   # url(r'^filter/(?P<needle>[\w-]+)/$',     'inventory.views.ServerFilterView', name='filter'),
                    #
-                   url(r'^(?P<pk>\d+)/$',        views.Detail.as_view(), name='detail'),
+                   # url(r'^(?P<pk>\d+)/$',        views.Detail.as_view(), name='detail'),
                    url(r'^(?P<pk>\d+)/update$',  views.Update.as_view(), name='update'),
                    url(r'^create/$',             views.Create.as_view(), name='create'),
-                   url(r'^$',                    views.List.as_view(),   name='list'),
+                   url(r'^$',                    views.List.as_view(),   name='index'),
                    )
 
 

@@ -45,6 +45,25 @@ class Install(RequireStaffMixin, generic.TemplateView):
             print(';')
             try:
                 #
+                this = company.models.Status
+                dropall(this)
+                if not this.objects.all():
+                    inject(this, name='PRE', notes='Pre-contract client, all work must be approved by VP.')
+                    inject(this, name='Active', notes='Active client.')
+                    inject(this, name='Decommissioned', notes='Previous client.')
+                    good(self, this)
+                #
+                this = company.models.Company
+                dropall(this)
+                if not this.objects.all():
+                    inject(this, name='Localhost Examples, LLC.', notes='Corporate systems.',
+                           status=company.models.Status.objects.get(name='Active'))
+                    inject(this, name='Web Cam Group', notes='unsigned contract on table',
+                           status=company.models.Status.objects.get(name='PRE'))
+                    inject(this, name='Illegal Activities Inc.', notes='Banned in 1999',
+                           status=company.models.Status.objects.get(name='Decommissioned'))
+                    good(self, this)
+                #
                 this = inventory.application.models.Application
                 dropall(this)
                 if not this.objects.all():
@@ -85,34 +104,15 @@ class Install(RequireStaffMixin, generic.TemplateView):
                            domain=inventory.domain.models.Domain.objects.get(name='prod.example.tld'),
                            environment=inventory.environment.models.Environment.objects.get(name='PROD'),
                            category=inventory.category.models.Category.objects.get(name='physical'),
-                           # company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
+                           company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
                            )
                     inject(this,
                            name='mail01',
                            domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
                            environment=inventory.environment.models.Environment.objects.get(name='DEV'),
                            category=inventory.category.models.Category.objects.get(name='virtual'),
-                           # company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
+                           company=company.models.Company.objects.get(name='Localhost Examples, LLC.'),
                            )
-                    good(self, this)
-                #
-                this = company.models.Status
-                dropall(this)
-                if not this.objects.all():
-                    inject(this, name='PRE', notes='Pre-contract client, all work must be approved by VP.')
-                    inject(this, name='Active', notes='Active client.')
-                    inject(this, name='Decommissioned', notes='Previous client.')
-                    good(self, this)
-                #
-                this = company.models.Company
-                dropall(this)
-                if not this.objects.all():
-                    inject(this, name='Localhost Examples, LLC.', notes='Corporate systems.',
-                           status=company.models.Status.objects.get(name='Active'))
-                    inject(this, name='Web Cam Group', notes='unsigned contract on table',
-                           status=company.models.Status.objects.get(name='PRE'))
-                    inject(this, name='Illegal Activities Inc.', notes='Banned in 1999',
-                           status=company.models.Status.objects.get(name='Decommissioned'))
                     good(self, this)
                 #
                 """
