@@ -59,9 +59,11 @@ class Install(RequireStaffMixin, generic.TemplateView):
                     inject(this, name='Localhost Examples, LLC.', notes='Corporate systems.',
                            status=company.models.Status.objects.get(name='Active'))
                     inject(this, name='Web Cam Group', notes='unsigned contract on table',
-                           status=company.models.Status.objects.get(name='PRE'))
+                           status=company.models.Status.objects.get(name='PRE'),
+                           customer_of=company.models.Company.objects.get(name='Localhost Examples, LLC.'))
                     inject(this, name='Illegal Activities Inc.', notes='Banned in 1999',
-                           status=company.models.Status.objects.get(name='Decommissioned'))
+                           status=company.models.Status.objects.get(name='Decommissioned'),
+                           customer_of=company.models.Company.objects.get(name='Localhost Examples, LLC.'))
                     good(self, this)
                 #
                 this = inventory.application.models.Application

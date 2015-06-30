@@ -20,10 +20,11 @@ class Company(UltraModel):
     name = models.CharField(max_length=256, unique=True)
     slug = models.SlugField(max_length=64, blank=True)
     status = models.ForeignKey(Status)
+    customer_of = models.ForeignKey('Company', null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         return super().save()
 
     def get_absolute_url(self):
-        return reverse('clients:detail', kwargs={'slug': self.slug})
+        return reverse('company:update', kwargs={'slug': self.slug})
