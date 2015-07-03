@@ -34,7 +34,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block HomeView %}{% endblock %}">
-                            <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+                            <a class="navbar-brand" href="{% url 'home' %}">Pyventory!</a>
                         </li>
                         <li class="dropdown{% block InventoryBlock %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
@@ -56,6 +56,15 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'inventory:machine:server:index' %}">Server</a></li>
                                 <li><a href="{% url 'inventory:machine:server:create' %}">add</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown{% block TicketsBlock %}{% endblock %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tickets <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{% url 'ticket:index' %}">My Queue</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{ url 'ticket:search' %}">Search</a></li>
+                                <li><a href="{% url 'ticket:create' %}">Create</a></li>
                             </ul>
                         </li>
                         <!-- li class="{% block ListView %}{% endblock %}">

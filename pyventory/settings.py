@@ -28,6 +28,7 @@ INSTALLED_APPS = (
     'inventory.environment',
     'inventory.machine',
     'company',
+    'ticket',
 )
 
 MIDDLEWARE_CLASSES = (

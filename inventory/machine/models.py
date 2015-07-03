@@ -32,8 +32,7 @@ class Server(UltraModel):
     def save(self, *args, **kwargs):
         """Force name to be lowercase"""
         self.name = self.name.lower()
-        #super(Server, self).save(*args, **kwargs)
         return super().save(*args, **kwargs)
 
-    def fqdn(self):
-        return '{0}.{1}'.format(self.name, self.domainname)
+    def __str__(self):
+        return '{0}.{1}'.format(self.name, self.domain)

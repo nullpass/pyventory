@@ -29,7 +29,6 @@ def dropall(this):
     Enable/disable of deleting all objects before adding default data.
     """
     this.objects.all().delete()
-    return
 
 
 class Install(RequireStaffMixin, generic.TemplateView):
@@ -42,7 +41,6 @@ class Install(RequireStaffMixin, generic.TemplateView):
         context = super().get_context_data()
         context['what'] = []
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':
-            print(';')
             try:
                 #
                 this = company.models.Status
