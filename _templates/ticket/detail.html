@@ -1,1 +1,11 @@
-ticket/detail.html
+{% extends "Root.html" %}
+
+{% block content %}
+<h1>{{ object.name }}</h1>
+    <ul>
+        <li>
+            <pre>{{ object.notes }}</pre>
+        </li>
+        <li><a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">[edit]</a></li>
+    </ul>
+{% endblock %}

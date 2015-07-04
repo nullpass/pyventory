@@ -19,7 +19,7 @@ urlpatterns = \
              # Add comment to ticket
              url(r'^(?P<environment>\w+)-(?P<pk>\d+)/reply', views.Reply.as_view(), name='reply'),
              # view or update existing comment, pk is now pk of the comment itself.
-             url(r'^comment/', include(comment_patterns, namespace='comment')),
+             url(r'^comment/', include(com_pat, namespace='comment')),
              # /tickets/filter/'needle'/  where needle == 'environment|company[slug]'
              # url(r'^filter/(?P<needle>[\w-]+)/$',     'ticket.views.Filter', name='filter'),
              )

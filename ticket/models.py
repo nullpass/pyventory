@@ -11,8 +11,26 @@ from company.models import Company
 
 
 class Ticket(UltraModel):
+    """
+    Name is the title of the ticket.
+    Notes (from UltraModel) is body.
+    Comments are a different object.
+
+    Environment is usually prod/non-prod/dev/test/qa/lab/etc...
+    Company is the base-ownership attribute. It's the first place (but not the last place) we look
+        to see if a human can view/edit a ticket
+
+    Servers and related_tickets are foreign key buckets that allow us to mention other objects and
+        get them dynamically linked.
+
+    Approvals replaces the old cctrl (change management) application. Auth'ed humans can now specify
+        if a ticket needs manager approval. There will be functions to specify which comment(s) are
+        related to the cctrl request.
+
+    """
     name = models.CharField(max_length=256, verbose_name='Title')
     environment = models.ForeignKey(Environment)
+    company = models.ForeignKey(Company)
     STATUS_CHOICES = (
         ('01', 'New'),          # New, not assigned
         ('02', 'Open'),         # Assigned, not working yet
@@ -25,15 +43,32 @@ class Ticket(UltraModel):
         choices=STATUS_CHOICES,
         default=STATUS_CHOICES[0][0]
     )
+    #
+    # These usually get automatically updated based on contents of comments.
     servers = models.ManyToManyField(Server, null=True)
     related_tickets = models.ManyToManyField('Ticket', null=True)
-    company = models.ForeignKey(Company)
+    #
+    # Hey guys, don't open _yet_another_ ticket in a completely different system just to get approval for work that is
+    #   already fully described in this ticket. Instead, ask for approval in the ticket itself when needed.
+    needs_approval = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse('ticket:detail', kwargs={'environment' : self.environment , 'pk': self.id})
 
     def __str__(self):
-        return '{0}-{1}'.format(self.environment , self.id)
+        return '{0}-{1}'.format(self.environment, self.id)
+
+    def save(self, *args, **kwargs):
+        """
+        Change self.name to the first line of self.notes
+        """
+        #
+        if '\n' in self.notes:
+            self.name = '{0}'.format(self.notes.split('\n')[0])
+        if len(self.name) < 8:
+            self.name = self.notes[0:16].replace('\r','').replace('\n', ' ')
+        return super().save(*args, **kwargs)
 
 
 class Comment(UltraModel):

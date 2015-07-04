@@ -6,9 +6,9 @@ Pyventory - A pet project that's currently 100% broken. :)
 * Everything!
 
 ### TODO:
-* Just imported the old ticket code, gotta fix it up real purrty
-* Servers: make 'resides_in' attr, use form attribute to capture during create/update and search+attach in view. OR put
- a find+link method in the model. 
+* May have to make ticket.Comment its own sub-app of /ticket/. Gettin kinda messy. 
+* Tickets: auto-set self.name to first line of self.notes. Remove self.name from forms.
+* Servers: During CreateView add attribute 'contains' as a form element, then find+link via form_valid override.  
 * Merge old cctrl code into ticket as attribute and a dash of business logic.
-* Get human/recent/core from all apps and send them to git as new repo. 
 * Inventory objects will need detail views and more heart later on.
+* Get human/recent/core from all apps and send them to git as new repo.

@@ -2,10 +2,11 @@ from django import forms
 
 from . import models
 
+
 class TicketForm(forms.ModelForm):
     class Meta:
         fields = (
-            'name',
+            # 'name',
             'notes',
             'company',
             'environment',
@@ -25,7 +26,7 @@ class TicketCreateForm(forms.ModelForm):
     """
     class Meta:
         fields = (
-            'name',
+            # 'name',
             'notes',
             'company',
             'environment',
@@ -33,7 +34,7 @@ class TicketCreateForm(forms.ModelForm):
         model = models.Ticket
 
 
-class Reply(forms.ModelForm):
+class ReplyForm(forms.ModelForm):
     """
     Add a comment to a ticket. Is this the in-line form too?
     """
