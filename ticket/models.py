@@ -45,8 +45,8 @@ class Ticket(UltraModel):
     )
     #
     # These usually get automatically updated based on contents of comments.
-    servers = models.ManyToManyField(Server, null=True)
-    related_tickets = models.ManyToManyField('Ticket', null=True)
+    servers = models.ManyToManyField(Server, null=True, blank=True)
+    related_tickets = models.ManyToManyField('Ticket', null=True, blank=True)
     #
     # Hey guys, don't open _yet_another_ ticket in a completely different system just to get approval for work that is
     #   already fully described in this ticket. Instead, ask for approval in the ticket itself when needed.
@@ -61,13 +61,14 @@ class Ticket(UltraModel):
 
     def save(self, *args, **kwargs):
         """
-        Change self.name to the first line of self.notes
+        Set self.name to the first line of self.notes;
+            but make sure new self.name length is reasonable.
         """
-        #
-        if '\n' in self.notes:
-            self.name = '{0}'.format(self.notes.split('\n')[0])
+        body = self.notes.replace('\r','')[:256]
+        if '\n' in body:
+            self.name = '{0}'.format(body.split('\n')[0])
         if len(self.name) < 8:
-            self.name = self.notes[0:16].replace('\r','').replace('\n', ' ')
+            self.name = body[0:16].replace('\n', ' ')
         return super().save(*args, **kwargs)
 
 

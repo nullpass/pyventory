@@ -1,7 +1,7 @@
 {% extends "Root.html" %}
 
 {% block content %}
-<h1>{{ object.name }}</h1>
+<h1>{{ object.name|truncatechars:64 }}</h1>
     <ul>
         <li>
             <pre>{{ object.notes }}</pre>

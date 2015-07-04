@@ -6,15 +6,10 @@ from . import models
 class TicketForm(forms.ModelForm):
     class Meta:
         fields = (
-            # 'name',
             'notes',
             'company',
             'environment',
             'status',
-            #'servers', ## Do not enable this, it will .clear() all relations on object save
-                        ## because we don't give the user a form.servers object.
-                        ## Dj assumes since nothing was sent in POST that all server relations
-                        ## should be erased on save()
             )
         model = models.Ticket
 
@@ -26,7 +21,6 @@ class TicketCreateForm(forms.ModelForm):
     """
     class Meta:
         fields = (
-            # 'name',
             'notes',
             'company',
             'environment',

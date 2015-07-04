@@ -6,7 +6,7 @@
     <ol>
         {% for this in recent_tickets %}
             <li>
-                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+                <a href="{{ this.get_absolute_url }}">{{ this }} {{ this.name|truncatechars:64 }}</a>
             </li>
         {% endfor %}
     </ol>
