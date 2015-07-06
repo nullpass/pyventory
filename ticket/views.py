@@ -32,6 +32,11 @@ class Update(generic.UpdateView):
     form_class, model = TicketForm, Ticket
     template_name = 'ticket/form.html'
 
+    def form_valid(self, form):
+        # autolink_related(self, form)
+        messages.success(self.request, self.__class__)
+        return super().form_valid(form)
+
 
 class Create(generic.CreateView):
     """
@@ -79,7 +84,7 @@ class CommentUpdate(generic.UpdateView):
 
     def form_valid(self, form):
         # autolink_related(self, form)
-        # messages.success(self.request, 'done')
+        messages.success(self.request, self.__class__)
         return super().form_valid(form)
 
 
