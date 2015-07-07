@@ -8,4 +8,11 @@
         </li>
         <li><a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">[edit]</a></li>
     </ul>
+
+
+    <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
+        {{ replyform }}
+        {% csrf_token %}
+        <input type="submit" class="btn btn-sm btn-info" value="save" />
+    </form>
 {% endblock %}

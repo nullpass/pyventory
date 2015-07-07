@@ -1,6 +1,6 @@
 from django.views import generic
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # from inventory.environment.models import Environment
 
@@ -61,15 +61,23 @@ class Detail(generic.DetailView):
     form_class, model = TicketForm, Ticket
     template_name = 'ticket/detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['replyform'] = ReplyForm
+        return context
 
-class Reply(generic.TemplateView):
+
+class Reply(generic.CreateView):
     """
     Add comment to ticket
     """
-    form_class, model = TicketForm, Ticket
+    form_class, model = ReplyForm, Comment
     template_name = 'ticket/index.html'
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.ticket = get_object_or_404(Ticket, id=self.kwargs.get('pk'))
+        self.object.save()
         # autolink_related(self, form)
         # messages.success(self.request, 'done')
         return super().form_valid(form)

@@ -6,7 +6,7 @@ Pyventory - A pet project that's currently 100% broken. :)
 * Everything!
 
 ### TODO:
-* May have to make ticket.Comment its own sub-app of /ticket/. Gettin kinda messy. 
+* Ticket: Show linked comments in detail view.
 * Servers: During CreateView add attribute 'contains' as a form element, then find+link via form_valid override.  
 * Inventory objects will need detail views and more heart later on.
 * Get human/recent/core from all apps and send them to git as new repo.
