@@ -1,7 +1,7 @@
 {% extends "Root.html" %}
 
 {% block content %}
-<h1>{{ object.name|truncatechars:64 }}</h1>
+    <h1>{{ object.name|truncatechars:64 }}</h1>
     <ul>
         <li>
             <pre>{{ object.notes }}</pre>
@@ -9,6 +9,15 @@
         <li><a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">[edit]</a></li>
     </ul>
 
+    <ol>
+        {% for this in object.comment_set.all %}
+            <li>
+                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+            </li>
+        {% empty %}
+            <hr>
+        {% endfor %}
+    </ol>
 
     <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
         {{ replyform }}

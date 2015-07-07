@@ -74,7 +74,7 @@ class Ticket(UltraModel):
 
 class Comment(UltraModel):
     name = models.TextField(max_length=1024, verbose_name='Comment')
-    ticket = models.ForeignKey(Ticket, blank=True, null=True, related_name='comment')
+    ticket = models.ForeignKey(Ticket, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('ticket:detail', kwargs={'environment' : self.ticket.environment , 'pk': self.ticket.pk})
