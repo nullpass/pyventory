@@ -1,11 +1,11 @@
 from django.views import generic
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 # from inventory.environment.models import Environment
 
-from .forms import TicketForm, TicketCreateForm, ReplyForm
 from .models import Ticket, Comment
+from . import forms
 
 
 class Index(generic.TemplateView):
@@ -13,7 +13,7 @@ class Index(generic.TemplateView):
     The default view for /tickets/
     Show recent activity and interesting stats.
     """
-    form_class, model = TicketForm, Ticket
+    form_class, model = forms.Ticket, Ticket
     template_name = 'ticket/index.html'
 
     def get_context_data(self, **kwargs):
@@ -29,7 +29,7 @@ class Update(generic.UpdateView):
     """
     Edit a ticket (not comments)
     """
-    form_class, model = TicketForm, Ticket
+    form_class, model = forms.Ticket, Ticket
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
@@ -42,7 +42,7 @@ class Create(generic.CreateView):
     """
     Create a new ticket
     """
-    form_class, model = TicketCreateForm, Ticket
+    form_class, model = forms.Ticket, Ticket
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
@@ -58,12 +58,12 @@ class Detail(generic.DetailView):
     """
     View a ticket
     """
-    form_class, model = TicketForm, Ticket
+    form_class, model = forms.Ticket, Ticket
     template_name = 'ticket/detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['replyform'] = ReplyForm
+        context['form_reply'] = forms.Reply
         return context
 
 
@@ -71,12 +71,17 @@ class Reply(generic.CreateView):
     """
     Add comment to ticket
     """
-    form_class, model = ReplyForm, Comment
+    form_class, model = forms.Reply, Comment
     template_name = 'ticket/index.html'
 
     def form_valid(self, form):
+        """
+        
+        """
         self.object = form.save(commit=False)
         self.object.ticket = get_object_or_404(Ticket, id=self.kwargs.get('pk'))
+        self.object.user = self.request.user
+        self.success_url = self.object.ticket.get_absolute_url()
         self.object.save()
         # autolink_related(self, form)
         # messages.success(self.request, 'done')
@@ -87,7 +92,7 @@ class CommentUpdate(generic.UpdateView):
     """
     Edit a comment
     """
-    form_class, model = ReplyForm, Comment
+    form_class, model = forms.Reply, Comment
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
@@ -100,5 +105,5 @@ class CommentDetail(generic.DetailView):
     """
     View a single comment
     """
-    form_class, model = ReplyForm, Comment
-    template_name = 'ticket/index.html'
+    form_class, model = forms.Reply, Comment
+    template_name = 'comment/detail.html'

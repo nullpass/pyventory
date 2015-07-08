@@ -1,0 +1,14 @@
+{% extends "Root.html" %}
+
+{% block pagetitle %}{{ object.name|truncatechars:64 }}{% endblock pagetitle %}
+
+{% block content %}
+    <ul>
+        <li>
+            <a href="{% url 'ticket:comment:update' pk=object.id %}">{{ object.created }}</a>
+            - by: {{ object.user }}
+            - in: <a href="{{ object.ticket.get_absolute_url }}">{{ object.ticket }}</a>
+            <p>{{ object|linebreaksbr }}</p>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,27 +1,26 @@
 {% extends "Root.html" %}
 
+{% block pagetitle %}{{ object.name|truncatechars:64 }}{% endblock pagetitle %}
+
 {% block content %}
-    <h1>{{ object.name|truncatechars:64 }}</h1>
     <ul>
         <li>
-            <pre>{{ object.notes }}</pre>
+            <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">{{ object.created }}</a>
+            <p>{{ object.notes|linebreaksbr }}</p>
         </li>
-        <li><a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">[edit]</a></li>
-    </ul>
-
-    <ol>
         {% for this in object.comment_set.all %}
             <li>
-                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+                    <a href="{{ this.get_absolute_url }}">{{ this.created }}</a> - {{ this|linebreaksbr }}
             </li>
         {% empty %}
             <hr>
         {% endfor %}
-    </ol>
-
-    <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
-        {{ replyform }}
-        {% csrf_token %}
-        <input type="submit" class="btn btn-sm btn-info" value="save" />
-    </form>
+        <li>
+            <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
+                {{ form_reply.name }}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-sm btn-info" value="save" />
+            </form>
+        </li>
+    </ul>
 {% endblock %}

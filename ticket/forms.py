@@ -3,7 +3,10 @@ from django import forms
 from . import models
 
 
-class TicketForm(forms.ModelForm):
+class Ticket(forms.ModelForm):
+    """
+
+    """
     class Meta:
         fields = (
             'notes',
@@ -14,21 +17,7 @@ class TicketForm(forms.ModelForm):
         model = models.Ticket
 
 
-class TicketCreateForm(forms.ModelForm):
-    """
-    New tickets don't have "status" because
-    it is forced to New on create.
-    """
-    class Meta:
-        fields = (
-            'notes',
-            'company',
-            'environment',
-            )
-        model = models.Ticket
-
-
-class ReplyForm(forms.ModelForm):
+class Reply(forms.ModelForm):
     """
     Add a comment to a ticket. Is this the in-line form too?
     """

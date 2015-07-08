@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
 
 from pyventory.models import UltraModel
 
@@ -57,6 +58,9 @@ class Ticket(UltraModel):
         return reverse('ticket:detail', kwargs={'environment' : self.environment , 'pk': self.id})
 
     def __str__(self):
+        """
+        ENV-ID is the 'ticket number' humans talk about.
+        """
         return '{0}-{1}'.format(self.environment, self.id)
 
     def save(self, *args, **kwargs):
@@ -73,8 +77,12 @@ class Ticket(UltraModel):
 
 
 class Comment(UltraModel):
+    """
+    A comment (or reply) to a ticket.
+    """
     name = models.TextField(max_length=1024, verbose_name='Comment')
     ticket = models.ForeignKey(Ticket, blank=True, null=True)
+    user = models.ForeignKey(User)
 
     def get_absolute_url(self):
-        return reverse('ticket:detail', kwargs={'environment' : self.ticket.environment , 'pk': self.ticket.pk})
+        return reverse('ticket:comment:detail', kwargs={'pk': self.id})
