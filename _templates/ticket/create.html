@@ -1,10 +1,15 @@
 {% extends "Root.html" %}
+
+{% block pagetitle %}Create ticket{% endblock pagetitle %}
+
 {% block content %}
     <form action="" method="post">
-        <ul>
-            {{ form.as_ul }}
-        </ul>
+        <ul>Create new ticket:</ul>
+        <ul>{{ form.notes }}</ul>
+        <ul>Customer: {{ form.company }}</ul>
+        <ul>Environ: {{ form.environment }}</ul>
+        <ul>{{ form.status.as_hidden }}</ul>
         {% csrf_token %}
-        <input type="submit" class="btn btn-sm btn-info" value="save" />
+        <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>
     </form>
 {% endblock %}

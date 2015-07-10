@@ -43,7 +43,7 @@ class Create(generic.CreateView):
     Create a new ticket
     """
     form_class, model = forms.Ticket, Ticket
-    template_name = 'ticket/form.html'
+    template_name = 'ticket/create.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -76,7 +76,7 @@ class Reply(generic.CreateView):
 
     def form_valid(self, form):
         """
-        
+
         """
         self.object = form.save(commit=False)
         self.object.ticket = get_object_or_404(Ticket, id=self.kwargs.get('pk'))
