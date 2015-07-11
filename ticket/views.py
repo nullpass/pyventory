@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Ticket, Comment
 from . import forms
-
+from .functions import link_related
 
 class Index(generic.TemplateView):
     """
@@ -33,8 +33,8 @@ class Update(generic.UpdateView):
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
-        # autolink_related(self, form)
-        messages.success(self.request, self.__class__)
+        link_related(self, form)
+        # messages.success(self.request, self.__class__)
         return super().form_valid(form)
 
 
@@ -96,8 +96,8 @@ class CommentUpdate(generic.UpdateView):
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
-        # autolink_related(self, form)
-        messages.success(self.request, self.__class__)
+        link_related(self, form)
+        # messages.success(self.request, self.__class__)
         return super().form_valid(form)
 
 

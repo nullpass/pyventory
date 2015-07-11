@@ -5,7 +5,7 @@ from . import models
 
 class Ticket(forms.ModelForm):
     """
-
+    Really?
     """
     class Meta:
         fields = (
@@ -13,14 +13,18 @@ class Ticket(forms.ModelForm):
             'company',
             'environment',
             'status',
+            'link_related',
             )
         model = models.Ticket
 
 
 class Reply(forms.ModelForm):
     """
-    Add a comment to a ticket. Is this the in-line form too?
+    Add a comment to a ticket.
     """
     class Meta:
-        fields = ('name',)
+        fields = (
+            'name',
+            'link_related',
+        )
         model = models.Comment

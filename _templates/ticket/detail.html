@@ -1,6 +1,6 @@
 {% extends "Root.html" %}
 
-{% block pagetitle %}{{ object.name|truncatechars:64 }}{% endblock pagetitle %}
+{% block pagetitle %}{{ object.environment }}-{{object.pk}} | {{ object.name|truncatechars:64 }}{% endblock pagetitle %}
 
 {% block content %}
     <ul>
@@ -8,12 +8,33 @@
             <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">{{ object.created }}</a>
             <p>{{ object.notes|linebreaksbr }}</p>
         </li>
-        {% for this in object.comment_set.all %}
+
+        <h4>related servers:</h4>
+        {% for this in object.servers.all %}
             <li>
-                    <a href="{{ this.get_absolute_url }}">{{ this.created }}</a> - {{ this|linebreaksbr }}
+                <a href="{# click to remove relation #}">X</a>
+                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
             </li>
         {% empty %}
-            <hr>
+            <li>[none]</li>
+        {% endfor %}
+
+        <h4>related tickets:</h4>
+        {% for this in object.related_tickets.all %}
+            <li>
+                <a href="{# click to remove relation #}">X</a>
+                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+            </li>
+        {% empty %}
+            <li>[none]</li>
+        {% endfor %}
+
+
+        <h4>comments:</h4>
+        {% for this in object.comment_set.all %}
+            <li>
+                <a href="{{ this.get_absolute_url }}">{{ this.created }}</a> - {{ this|linebreaksbr }}
+            </li>
         {% endfor %}
         <li>
             <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
@@ -22,5 +43,6 @@
                 <input type="submit" class="btn btn-sm btn-info" value="save" />
             </form>
         </li>
+
     </ul>
 {% endblock %}

@@ -45,6 +45,7 @@ class Ticket(UltraModel):
         default=STATUS_CHOICES[0][0]
     )
     #
+    link_related = models.BooleanField(default=True)
     # These usually get automatically updated based on contents of comments.
     servers = models.ManyToManyField(Server, null=True, blank=True)
     related_tickets = models.ManyToManyField('Ticket', null=True, blank=True)
@@ -83,6 +84,7 @@ class Comment(UltraModel):
     name = models.TextField(max_length=1024, verbose_name='Comment')
     ticket = models.ForeignKey(Ticket, blank=True, null=True)
     user = models.ForeignKey(User)
+    link_related = models.BooleanField(default=True)
 
     def get_absolute_url(self):
         return reverse('ticket:comment:detail', kwargs={'pk': self.id})

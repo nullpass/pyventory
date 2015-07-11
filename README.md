@@ -8,6 +8,8 @@ Pyventory - A pet project that's currently 100% broken. :)
 ### TODO:
 * Add django-braces. 
 * Tickets: ownership
+* Associate domains with companies, then enable company-checking in link_related()
+* ...then update install wizard to create domains with companies attached.
 * Servers: During CreateView add attribute 'contains' as a form element, then find+link via form_valid override.  
 * Inventory objects will need detail views and more heart later on.
 * Get human/recent/core from all apps and send them to git as new repo.
