@@ -2,14 +2,14 @@
 
 {% block pagetitle %}Create ticket{% endblock pagetitle %}
 
-{% block content %}
-    <form action="" method="post">
+{% block content %}{{ form.non_field_errors }}
+    <form action="" method="post">{% csrf_token %}
         <ul>Create new ticket:</ul>
-        <ul>{{ form.notes }}</ul>
-        <ul>Customer: {{ form.company }}</ul>
-        <ul>Environ: {{ form.environment }}</ul>
+        <ul>{{ form.notes }} {{ form.notes.errors }}</ul>
+        <ul>Customer: {{ form.company }} {{ form.company.errors }}</ul>
+        <ul>Environ: {{ form.environment }} {{ form.environment.errors }}</ul>
         <ul>{{ form.status.as_hidden }}</ul>
-        {% csrf_token %}
+        <ul>{{ form.link_related.label }} {{ form.link_related }}</ul>
         <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>
     </form>
 {% endblock %}

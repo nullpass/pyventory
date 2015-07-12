@@ -2,13 +2,15 @@ from django.views import generic
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
+from braces.views import LoginRequiredMixin
+
 # from inventory.environment.models import Environment
 
 from .models import Ticket, Comment
 from . import forms
 from .functions import link_related
 
-class Index(generic.TemplateView):
+class Index(LoginRequiredMixin, generic.TemplateView):
     """
     The default view for /tickets/
     Show recent activity and interesting stats.
@@ -25,7 +27,7 @@ class Index(generic.TemplateView):
         return context
 
 
-class Update(generic.UpdateView):
+class Update(LoginRequiredMixin, generic.UpdateView):
     """
     Edit a ticket (not comments)
     """
@@ -33,12 +35,14 @@ class Update(generic.UpdateView):
     template_name = 'ticket/form.html'
 
     def form_valid(self, form):
+        if not form.cleaned_data['notes']:
+            return super().form_invalid(form)
         link_related(self, form)
         # messages.success(self.request, self.__class__)
         return super().form_valid(form)
 
 
-class Create(generic.CreateView):
+class Create(LoginRequiredMixin, generic.CreateView):
     """
     Create a new ticket
     """
@@ -46,6 +50,8 @@ class Create(generic.CreateView):
     template_name = 'ticket/create.html'
 
     def form_valid(self, form):
+        if not form.cleaned_data['notes']:
+            return super().form_invalid(form)
         self.object = form.save(commit=False)
         self.object.status='New'
         self.object.save()
@@ -54,7 +60,7 @@ class Create(generic.CreateView):
         return super().form_valid(form)
 
 
-class Detail(generic.DetailView):
+class Detail(LoginRequiredMixin, generic.DetailView):
     """
     View a ticket
     """
@@ -67,28 +73,29 @@ class Detail(generic.DetailView):
         return context
 
 
-class Reply(generic.CreateView):
+class Reply(LoginRequiredMixin, generic.CreateView):
     """
     Add comment to ticket
     """
     form_class, model = forms.Reply, Comment
     template_name = 'ticket/index.html'
 
-    def form_valid(self, form):
-        """
+    def form_invalid(self, form):
+        # messages.warning(self.request, 'what?')
+        return super().form_invalid(form)
 
-        """
+    def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.ticket = get_object_or_404(Ticket, id=self.kwargs.get('pk'))
         self.object.user = self.request.user
         self.success_url = self.object.ticket.get_absolute_url()
         self.object.save()
-        # autolink_related(self, form)
+        link_related(self, form)
         # messages.success(self.request, 'done')
         return super().form_valid(form)
 
 
-class CommentUpdate(generic.UpdateView):
+class CommentUpdate(LoginRequiredMixin, generic.UpdateView):
     """
     Edit a comment
     """
@@ -101,9 +108,22 @@ class CommentUpdate(generic.UpdateView):
         return super().form_valid(form)
 
 
-class CommentDetail(generic.DetailView):
+class CommentDetail(LoginRequiredMixin, generic.DetailView):
     """
     View a single comment
     """
     form_class, model = forms.Reply, Comment
     template_name = 'comment/detail.html'
+
+
+class Unlink(LoginRequiredMixin, generic.UpdateView):
+    """
+    Remove an association
+    """
+    form_class, model = forms.Ticket, Ticket
+    template_name = 'ticket/form.html'
+
+    def form_valid(self, form):
+        link_related(self, form)
+        # messages.success(self.request, self.__class__)
+        return super().form_valid(form)

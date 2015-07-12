@@ -4,10 +4,19 @@ import time
 from django.views import generic
 from django.contrib import messages
 
-from .mixins import RequireOwnerMixin, RequireUserMixin, RequireStaffMixin
+from braces.views import AnonymousRequiredMixin, SuperuserRequiredMixin, LoginRequiredMixin
 
 import company
 import inventory
+
+
+class Login(AnonymousRequiredMixin, generic.TemplateView):
+    template_name = 'login.html'
+
+
+class Profile(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'home.html'
+
 
 def good(view, this):
     """
@@ -18,11 +27,13 @@ def good(view, this):
         this.objects.all()
     ))
 
+
 def inject(obj, **kwargs):
     """
     Force insert of arbitrary data
     """
     obj(**kwargs).save()
+
 
 def dropall(this):
     """
@@ -31,7 +42,7 @@ def dropall(this):
     this.objects.all().delete()
 
 
-class Install(RequireStaffMixin, generic.TemplateView):
+class Install(SuperuserRequiredMixin, generic.TemplateView):
     """
     Inject usable default data
     """
@@ -58,10 +69,10 @@ class Install(RequireStaffMixin, generic.TemplateView):
                            status=company.models.Status.objects.get(name='Active'))
                     inject(this, name='Customer 1', notes='unsigned contract on table',
                            status=company.models.Status.objects.get(name='PRE'),
-                           customer_of=company.models.Company.objects.get(pk=1))
+                           customer_of=company.models.Company.objects.first())
                     inject(this, name='Customer 2', notes='Banned in 1999',
                            status=company.models.Status.objects.get(name='Decommissioned'),
-                           customer_of=company.models.Company.objects.get(pk=1))
+                           customer_of=company.models.Company.objects.first())
                     good(self, this)
                 #
                 this = inventory.application.models.Application
@@ -104,14 +115,14 @@ class Install(RequireStaffMixin, generic.TemplateView):
                            domain=inventory.domain.models.Domain.objects.get(name='prod.example.tld'),
                            environment=inventory.environment.models.Environment.objects.get(name='PROD'),
                            category=inventory.category.models.Category.objects.get(name='physical'),
-                           company=company.models.Company.objects.get(pk=1),
+                           company=company.models.Company.objects.first(),
                            )
                     inject(this,
                            name='mail01',
                            domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
                            environment=inventory.environment.models.Environment.objects.get(name='DEV'),
                            category=inventory.category.models.Category.objects.get(name='virtual'),
-                           company=company.models.Company.objects.get(pk=1),
+                           company=company.models.Company.objects.first(),
                            )
                     good(self, this)
                 #

@@ -4,10 +4,13 @@ from django.views.generic import TemplateView
 
 from cfgpyventory import LOCAL_ADMIN_URL
 
-from .views import Install
+from .views import Install, Login, Profile
 
 
 urlpatterns = patterns('',
+                       url(r'^accounts/login', Login.as_view(), name='login'),
+                       url(r'^accounts/profile/$', Profile.as_view(), name='profile'),
+                       #
                        url(r'^inventory/', include('inventory.urls', namespace='inventory')),
                        #
                        url(r'^ticket/', include('ticket.urls', namespace='ticket')),
