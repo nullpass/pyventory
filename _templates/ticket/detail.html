@@ -5,14 +5,21 @@
 {% block content %}
     <ul>
         <li>
-            <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">{{ object.created }}</a>
+            {{ object.environment }}-{{object.pk}} |
+            {{ object.name|truncatechars:64 }} |
+            {{ object.created }} |
+            (<u>{{ object.get_status_display }}{% if object.user %}, assigned to: {{ object.user }}{% endif %}</u>) |
+            <a href="{% url 'ticket:seize' environment=object.environment pk=object.id %}">assign to me</a> |
+            <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">edit ticket</a> |
+        </li>
+        <li>
             <p>{{ object.notes|linebreaksbr }}</p>
         </li>
         {% if object.servers.count > 0 %}
         <h4>related servers:</h4>
         {% for this in object.servers.all %}
             <li>
-                [<a href="{% url 'ticket:unlink:server' environment=object.environment pk=object.id needle=this.pk %}">x</a>]
+                [<a href="{% url 'ticket:unlink:server' environment=object.environment pk=object.id server=this.pk %}">x</a>]
                 <a href="{{ this.get_absolute_url }}">{{ this }}</a>
             </li>
         {% empty %}
@@ -24,7 +31,7 @@
         <h4>related tickets:</h4>
         {% for this in object.related_tickets.all %}
             <li>
-                [<a href="{% url 'ticket:unlink:ticket' environment=object.environment pk=object.id needle=this.pk %}">x</a>]
+                [<a href="{% url 'ticket:unlink:ticket' environment=object.environment pk=object.id ticket=this.pk %}">x</a>]
                 <a href="{{ this.get_absolute_url }}">{{ this }}</a>
             </li>
         {% empty %}

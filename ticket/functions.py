@@ -2,6 +2,8 @@
 import re
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from inventory.machine.models import Server, Environment
 from ticket.models import Ticket
@@ -16,7 +18,6 @@ def link_related(self, form):
     """
     self.object = form.save()
     if not self.object.link_related:
-        print('link_related is false, return.')
         return
     separator = '[,:\. <>\[\];\r\n]+'
     paragraph = re.split(separator, '{0} {1}'.format(self.object.name, self.object.notes))
@@ -45,6 +46,22 @@ def link_related(self, form):
             i = int(w[1])
             try:
                 ticket.related_tickets.add(Ticket.objects.get(pk=i,environment=environment))
-            except ObjectDoesNotExist as e:
-                print(e)
+            except ObjectDoesNotExist:
                 pass
+
+
+def unlink_related(self):
+    """
+    Remove a link between a ticket and another ticket or a server.
+    """
+    if self.kwargs.get('server'):
+        this = get_object_or_404(Server, id=self.kwargs.get('server'))
+        if this in self.object.servers.all():
+            self.object.servers.remove(this)
+            messages.info(self.request, 'Unlinked server {0} from this ticket.'.format(this))
+    elif self.kwargs.get('ticket'):
+        this = get_object_or_404(Ticket, id=self.kwargs.get('ticket'))
+        if this in self.object.related_tickets.all():
+            self.object.related_tickets.remove(this)
+            messages.info(self.request, 'Unlinked ticket {0} from this ticket.'.format(this))
+    return

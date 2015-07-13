@@ -8,6 +8,7 @@ class DomainForm(forms.ModelForm):
     class Meta:
         fields = (
             'name',
+            'company',
             'notes',
             'doc_url',
         )

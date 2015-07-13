@@ -30,8 +30,9 @@ class Ticket(UltraModel):
 
     """
     name = models.CharField(max_length=256, verbose_name='Title')
-    environment = models.ForeignKey(Environment)
-    company = models.ForeignKey(Company)
+    environment = models.ForeignKey(Environment, null=True, on_delete=models.SET_NULL)
+    company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     STATUS_CHOICES = (
         ('01', 'New'),          # New, not assigned
         ('02', 'Open'),         # Assigned, not working yet
@@ -66,14 +67,17 @@ class Ticket(UltraModel):
 
     def save(self, *args, **kwargs):
         """
-        Set self.name to the first line of self.notes;
-            but make sure new self.name length is reasonable.
+        Automatically set the title of the ticket to the first line of the body.
         """
-        body = self.notes.replace('\r','')[:256]
+        max_len = 64
+        body = self.notes.replace('\r','')[:128]
+        self.name = body[0:max_len].replace('\n', ' ')  # Default to first X characters
         if '\n' in body:
-            self.name = '{0}'.format(body.split('\n')[0])
+            self.name = '{0}'.format(body.split('\n')[0])  # Use first line if there is a line break.
+        elif '.' in body:
+            self.name = '{0}.'.format(body.split('.')[0])  # Else use first sentence.
         if len(self.name) < 8:
-            self.name = body[0:16].replace('\n', ' ')
+            self.name = body[0:max_len].replace('\n', ' ')  # If the resulting title is too short revert to default.
         return super().save(*args, **kwargs)
 
 
@@ -82,8 +86,8 @@ class Comment(UltraModel):
     A comment (or reply) to a ticket.
     """
     name = models.TextField(max_length=1024, verbose_name='Comment')
-    ticket = models.ForeignKey(Ticket, blank=True, null=True)
-    user = models.ForeignKey(User)
+    ticket = models.ForeignKey(Ticket, blank=True, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     link_related = models.BooleanField(default=True)
 
     def get_absolute_url(self):

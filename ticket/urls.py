@@ -12,8 +12,8 @@ com_pat = \
 
 unl_pat = \
     patterns('',
-             url(r'^/server/(?P<needle>\d+)/$', views.Unlink.as_view(), name='server'),
-             url(r'^/ticket/(?P<needle>\d+)/$', views.Unlink.as_view(), name='ticket'),
+             url(r'^server/(?P<server>\d+)/$', views.Unlink.as_view(), name='server'),
+             url(r'^ticket/(?P<ticket>\d+)/$', views.Unlink.as_view(), name='ticket'),
              )
 
 urlpatterns = \
@@ -25,6 +25,8 @@ urlpatterns = \
              url(r'^(?P<environment>\w+)-(?P<pk>\d+)/unlink/', include(unl_pat, namespace='unlink')),
              # Add comment to ticket
              url(r'^(?P<environment>\w+)-(?P<pk>\d+)/reply', views.Reply.as_view(), name='reply'),
+             # Assign ticket to $me.
+             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/seize', views.Seize.as_view(), name='seize'),
              # view or update existing comment, pk is now pk of the comment itself.
              url(r'^comment/', include(com_pat, namespace='comment')),
              # /tickets/filter/'needle'/  where needle == 'environment|company[slug]'

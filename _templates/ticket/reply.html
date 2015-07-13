@@ -1,0 +1,15 @@
+{% extends "Root.html" %}
+
+{% block pagetitle %}{{ object.name }}{% endblock pagetitle %}
+
+{% block content %}
+    <form action="" method="post">
+        <ul>
+            {{ form.as_ul }}
+            {% if object.created %}<li>Created: {{ object.created }}</li>{% endif %}
+            {% if object.modified %}<li>Last modified: {{ object.modified }}</li>{% endif %}
+        </ul>
+        {% csrf_token %}
+        <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>
+    </form>
+{% endblock %}

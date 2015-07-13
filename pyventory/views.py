@@ -18,11 +18,11 @@ class Profile(LoginRequiredMixin, generic.TemplateView):
     template_name = 'home.html'
 
 
-def good(view, this):
+def good(self, this):
     """
     Show success message
     """
-    messages.success(view.request, '{0} - Added: {1}'.format(
+    messages.success(self.request, '{0} - Added: {1}'.format(
         time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
         this.objects.all()
     ))
@@ -78,9 +78,15 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 this = inventory.application.models.Application
                 dropall(this)
                 if not this.objects.all():
-                    inject(this, name='monitoring.example.tld', notes='Bob\'s dumb naaaagios servers.')
-                    inject(this, name='wiki.example.tld', notes='Internal Documentation website')
-                    inject(this, name='vpn.prod.corp', notes='Employee VPN site. Notify DSD _and_ JC of any outages.')
+                    inject(this,
+                           name='monitoring.example.tld',
+                           notes='Bob\'s dumb naaaagios servers.')
+                    inject(this,
+                           name='wiki.example.tld',
+                           notes='Internal Documentation website')
+                    inject(this,
+                           name='vpn.prod.corp',
+                           notes='Employee VPN site. Notify DSD _and_ JC of any outages.')
                     good(self, this)
                 #
                 this = inventory.category.models.Category
@@ -95,9 +101,22 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 this = inventory.domain.models.Domain
                 dropall(this)
                 if not this.objects.all():
-                    inject(this, name='prod.example.tld', notes='Example.tld\'s production servers.')
-                    inject(this, name='dev.example.tld', notes='dev servers for example.tld')
-                    inject(this, name='prod.corp', notes='Our production infrastructure.')
+                    inject(this,
+                           name='prod.example.tld',
+                           notes='Example.tld\'s production servers.',
+                           company=company.models.Company.objects.first())
+                    inject(this,
+                           name='dev.example.tld',
+                           notes='dev servers for example.tld',
+                           company=company.models.Company.objects.first())
+                    inject(this,
+                           name='prod.corp',
+                           notes='Our production infrastructure.',
+                           company=company.models.Company.objects.first())
+                    inject(this,
+                           name='cdn.amazoogle.gov',
+                           notes='Search and buy all on the same government-controlled portal!',
+                           company=company.models.Company.objects.last())
                     good(self, this)
                 #
                 this = inventory.environment.models.Environment
