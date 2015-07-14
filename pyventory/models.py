@@ -14,6 +14,9 @@ class UltraModel(models.Model):
     # nearly everything.
     doc_url = models.URLField(blank=True, null=True)    # A URL to external/wiki documentation about the object.
     notes = models.TextField(blank=True, null=True)     # Comments/notes about the object
+    #
+    # For later on when we override model and queryset .delete() methods.
+    exists = models.BooleanField(default=True)
     
     class Meta:
         abstract = True
