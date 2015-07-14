@@ -7,13 +7,8 @@ SECRET_KEY = cfgpyventory.SECRET_KEY
 DEBUG = cfgpyventory.DEBUG
 TEMPLATE_DEBUG = cfgpyventory.TEMPLATE_DEBUG
 ALLOWED_HOSTS = cfgpyventory.ALLOWED_HOSTS
-# DATABASES = cfgpyventory.DATABASES
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'pyventory.sqlite3'),
-    }
-}
+DATABASES = cfgpyventory.DATABASES
+STATIC_URL = cfgpyventory.STATIC_URL
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -54,8 +49,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-STATIC_URL = cfgpyventory.STATIC_URL
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
