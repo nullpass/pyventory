@@ -8,6 +8,20 @@ from braces.views import AnonymousRequiredMixin, SuperuserRequiredMixin, LoginRe
 
 import company
 import inventory
+import ticket
+
+_li = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+"""
+
+_il = """First sentence, sans linebreak. Paleo post-ironic mixtape, twee heirloom stumptown Wess Wanderson four dollar toast Truffaut freegan health goth master cleanse.
+
+Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to-table Helvetica cray migas narwhal
+cliche.
+Mlkshk small batch gluten-free migas."""
 
 
 class Login(AnonymousRequiredMixin, generic.TemplateView):
@@ -145,17 +159,20 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            )
                     good(self, this)
                 #
-                """
-                this = tickets.models.Status
+                this = ticket.models.Ticket
                 dropall(this)
                 if not this.objects.all():
-                    inject(this, name='New', notes='New ticket, unowned')
-                    inject(this, name='Open', notes='Assigned, work not started.')
-                    inject(this, name='In Progress', notes='Assigned, work in progress.')
-                    inject(this, name='Pending', notes='Assigned, work stopped, waiting on customer, approval or project.')
-                    inject(this, name='Resolved', notes='Assigned, work complete and verified.')
+                    inject(this,
+                           notes=_li,
+                           company=company.models.Company.objects.first(),
+                           environment=inventory.environment.models.Environment.objects.first(),
+                           )
+                    inject(this,
+                           notes=_il,
+                           company=company.models.Company.objects.last(),
+                           environment=inventory.environment.models.Environment.objects.last(),
+                           )
                     good(self, this)
-                """
                 #
             except Exception as e:
                 messages.error(self.request, e, extra_tags='danger')
