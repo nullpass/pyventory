@@ -6,14 +6,14 @@
     <ul>
         <li>
             {{ object.environment }}-{{object.pk}} |
-            {{ object.name|truncatechars:64 }} |
+            {{ object.body|truncatechars:64 }} |
             {{ object.created }} |
             (<u>{{ object.get_status_display }}{% if object.user %}, assigned to: {{ object.user }}{% endif %}</u>) |
             <a href="{% url 'ticket:seize' environment=object.environment pk=object.id %}">assign to me</a> |
             <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">edit ticket</a> |
         </li>
         <li>
-            <p>{{ object.notes|linebreaksbr }}</p>
+            <p>{{ object.body|linebreaksbr }}</p>
         </li>
         {% if object.servers.count > 0 %}
         <h4>related servers:</h4>
@@ -47,7 +47,7 @@
         {% endfor %}
         <li>
             <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
-                {{ form_reply.name }} {{ form_reply.name.errors }} {{ form_reply.link_related.as_hidden }}
+                {{ form_reply.name }} {{ form_reply.name.errors }} {{ form_reply.can_link_related.as_hidden }}
                 {% csrf_token %}
                 <input type="submit" class="btn btn-sm btn-info" value="save" />
             </form>

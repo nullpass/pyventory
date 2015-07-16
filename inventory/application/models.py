@@ -11,9 +11,9 @@ class Application(UltraModel):
     The reverse is also true, if an app shows down, it will be obvious which systems/objects need attention.
 
     Gone should be the days when an operator says only "the url is down".
-
     """
     name = models.CharField(max_length=1024, unique=True)
+    # can_link_related = models.BooleanField(default=True)
 
     def get_absolute_url(self):
         return reverse('inventory:application:update', kwargs={'pk': self.id})

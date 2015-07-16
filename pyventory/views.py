@@ -163,12 +163,12 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 dropall(this)
                 if not this.objects.all():
                     inject(this,
-                           notes=_li,
+                           body=_li,
                            company=company.models.Company.objects.first(),
                            environment=inventory.environment.models.Environment.objects.first(),
                            )
                     inject(this,
-                           notes=_il,
+                           body=_il,
                            company=company.models.Company.objects.last(),
                            environment=inventory.environment.models.Environment.objects.last(),
                            )

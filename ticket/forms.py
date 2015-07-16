@@ -7,13 +7,15 @@ class Ticket(forms.ModelForm):
     """
     Really?
     """
+    notes = forms.Textarea()
+
     class Meta:
         fields = (
-            'notes',
+            'body',
             'company',
             'environment',
             'status',
-            'link_related',
+            'can_link_related',
             )
         model = models.Ticket
 
@@ -22,9 +24,10 @@ class Reply(forms.ModelForm):
     """
     Add a comment to a ticket.
     """
+
     class Meta:
         fields = (
             'name',
-            'link_related',
+            'can_link_related',
         )
         model = models.Comment
