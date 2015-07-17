@@ -3,6 +3,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
+from django.core.exceptions import ObjectDoesNotExist
 
 from pyventory.models import UltraModel
 
@@ -36,3 +37,9 @@ class Server(UltraModel):
 
     def __str__(self):
         return '{0}.{1}'.format(self.name, self.domain)
+
+    def become_child(self, parent):
+        try:
+            self.resides = Server.objects.get(environment=self.environment, name=parent)
+        except ObjectDoesNotExist:
+            pass

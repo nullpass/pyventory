@@ -43,10 +43,11 @@ def link_related(self):
         for this_word in words:
             w = this_word.split('-')
             i = int(w[1])
-            try:
-                ticket.related_tickets.add(Ticket.objects.get(pk=i,environment=environment))
-            except ObjectDoesNotExist:
-                pass
+            if i is not ticket.pk:
+                try:
+                    ticket.related_tickets.add(Ticket.objects.get(pk=i,environment=environment))
+                except ObjectDoesNotExist:
+                    pass
 
 
 class Ticket(UltraModel):

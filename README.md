@@ -3,13 +3,12 @@ Pyventory - A not-ready-for-primetime Dj project.
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
 ### Bugs:
-* tickets can relate to themselves
+* all
 
 ### TODO:
 * go back to the whiteboard for the domain/company/env flow.
 3. Tickets: enable company-checking in link_related()
 4. Install: update install wizard to create domains with companies attached.
-* Servers: During CreateView add attribute 'contains' as a form element, then find+link  
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Reply: success url should include #shortcut to comment that was added/updated. Don't need messages() there.
