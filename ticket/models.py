@@ -73,11 +73,11 @@ class Ticket(UltraModel):
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     STATUS_CHOICES = (
-        ('01', 'New'),          # New, not assigned
-        ('02', 'Open'),         # Assigned, not working yet
-        ('03', 'In Progress'),  # Assigned, work in progress
-        ('04', 'Pending'),      # Assigned, waiting on someone or something
-        ('05', 'Resolved'),     # Assigned, work complete
+        ('10', 'New'),          # New, not assigned
+        ('20', 'Open'),         # Assigned, not working yet
+        ('30', 'In Progress'),  # Assigned, work in progress
+        ('40', 'Pending'),      # Assigned, waiting on someone or something
+        ('50', 'Resolved'),     # Assigned, work complete
     )
     status = models.CharField(
         max_length=2,
@@ -112,7 +112,7 @@ class Ticket(UltraModel):
         4. Find and link any related objects.
         """
         if not self.pk:
-            self.status='01'
+            self.status='10'
         body = self.body.replace('\r','')[:128]
         self.name = body.replace('\n', ' ')  # Default to first X characters
         if '\n' in body:

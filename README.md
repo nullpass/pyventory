@@ -2,13 +2,14 @@ Pyventory - A not-ready-for-primetime Dj project.
 =============================================================
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
-### Bugs:
-* all
-
-### TODO:
-* go back to the whiteboard for the domain/company/env flow.
-3. Tickets: enable company-checking in link_related()
-4. Install: update install wizard to create domains with companies attached.
+### Next:
+* REFACTOR:
+    * Remove ENV from ticket url and attr; keep company attr
+    * Add SLA attr to domain
+    * Explain SLA relation to domain during ticket creation
+        * Select by company then domain or just domain? 
+    * Match changes in install wizard
+* Auth: Basic local log(in|out), profile
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Reply: success url should include #shortcut to comment that was added/updated. Don't need messages() there.

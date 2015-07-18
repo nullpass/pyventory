@@ -107,6 +107,6 @@ class Seize(LoginRequiredMixin, generic.DetailView):
     def render_to_response(self, context, **response_kwargs):
         self.object.user = self.request.user
         if self.object.get_status_display() == 'New':
-            self.object.status = '02'
+            self.object.status = '20'
         self.object.save()
         return redirect(self.object.get_absolute_url())

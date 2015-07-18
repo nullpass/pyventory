@@ -1,17 +1,11 @@
-# inventory/machine/models.py
-
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.core.exceptions import ObjectDoesNotExist
 
 from pyventory.models import UltraModel
-
-from inventory.environment.models import Environment
 from inventory.domain.models import Domain
-from inventory.category.models import Category
 
-from company.models import Company
 
 class Server(UltraModel):
     """
@@ -19,10 +13,23 @@ class Server(UltraModel):
     """
     name = models.CharField(validators=[RegexValidator('^[a-zA-Z0-9\.\-\_]+$')], max_length=32)
     domain = models.ForeignKey(Domain)
-    environment = models.ForeignKey(Environment)
     resides = models.ForeignKey('Server', null=True)
-    category = models.ForeignKey(Category, null=True)
-    company = models.ForeignKey(Company, null=True)
+    CHOICES = (
+        ('10', 'Rack-mounted server'),
+        ('20', 'Virtual server (VMware)'),
+        ('22', 'Virtual server (Oracle_VM) DO-NOT-USE!'),
+        ('24', 'Virtual server (other)'),
+        ('30', 'Blade'),
+        ('32', 'Blade chassis'),
+        ('40', 'Appliance'),
+        ('50', 'Portable device'),
+        ('90', 'Imaginary'),
+    )
+    category = models.CharField(
+        max_length=2,
+        choices=CHOICES,
+        default=CHOICES[0][0]
+    )
 
     class Meta:
         unique_together = (("name", "domain"),)
@@ -40,6 +47,6 @@ class Server(UltraModel):
 
     def become_child(self, parent):
         try:
-            self.resides = Server.objects.get(environment=self.environment, name=parent)
+            self.resides = Server.objects.get(environment=self.domain, name=parent)
         except ObjectDoesNotExist:
-            pass
+            raise ObjectDoesNotExist('Server {0}.{1} does not exist'.format(parent, self.domain))
