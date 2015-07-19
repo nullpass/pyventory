@@ -1,17 +1,17 @@
 {% extends "Root.html" %}
 
-{% block pagetitle %}{{ object.environment }}-{{object.pk}} | {{ object.name|truncatechars:64 }}{% endblock pagetitle %}
+{% block pagetitle %}(#{{object.pk}}) {{ object.name|truncatechars:32 }}{% endblock pagetitle %}
 
 {% block content %}
-    <ul>
+    <ul style="list-style:none">
         <li>
-            {{ object.environment }}-{{object.pk}} |
-            {{ object.body|truncatechars:64 }} |
+            #{{object.pk}} ({{ object.domain }}) |
             {{ object.created }} |
             (<u>{{ object.get_status_display }}{% if object.user %}, assigned to: {{ object.user }}{% endif %}</u>) |
-            <a href="{% url 'ticket:seize' environment=object.environment pk=object.id %}">assign to me</a> |
-            <a href="{% url 'ticket:update' environment=object.environment pk=object.id %}">edit ticket</a> |
+            <a href="{% url 'ticket:seize' pk=object.id %}">assign to me</a> |
+            <a href="{% url 'ticket:update' pk=object.id %}">edit ticket</a> |
         </li>
+        <li><hr width="50%"></li>
         <li>
             <p>{{ object.body|linebreaksbr }}</p>
         </li>
@@ -19,7 +19,7 @@
         <h4>related servers:</h4>
         {% for this in object.servers.all %}
             <li>
-                [<a href="{% url 'ticket:unlink:server' environment=object.environment pk=object.id server=this.pk %}">x</a>]
+                [<a href="{% url 'ticket:unlink:server' pk=object.id server=this.pk %}">x</a>]
                 <a href="{{ this.get_absolute_url }}">{{ this }}</a>
             </li>
         {% empty %}
@@ -28,10 +28,10 @@
         {% endif %}
 
         {% if object.related_tickets.count > 0 %}
-        <h4>related tickets:</h4>
+        <li><h4>related tickets:</h4></li>
         {% for this in object.related_tickets.all %}
             <li>
-                [<a href="{% url 'ticket:unlink:ticket' environment=object.environment pk=object.id ticket=this.pk %}">x</a>]
+                [<a href="{% url 'ticket:unlink:ticket' pk=object.id ticket=this.pk %}">x</a>]
                 <a href="{{ this.get_absolute_url }}">{{ this }}</a>
             </li>
         {% empty %}
@@ -39,14 +39,14 @@
         {% endfor %}
         {% endif %}
 
-        <h4>comments:</h4>
+        <li><h4>comments:</h4></li>
         {% for this in object.comment_set.all %}
             <li>
                 <a href="{{ this.get_absolute_url }}">{{ this.created }}</a> - {{ this|linebreaksbr }}
             </li>
         {% endfor %}
         <li>
-            <form action="{% url 'ticket:reply' environment=object.environment pk=object.id %}" method="post">
+            <form action="{% url 'ticket:reply' pk=object.id %}" method="post">
                 {{ form_reply.name }} {{ form_reply.name.errors }} {{ form_reply.can_link_related.as_hidden }}
                 {% csrf_token %}
                 <input type="submit" class="btn btn-sm btn-info" value="save" />

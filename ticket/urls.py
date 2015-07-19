@@ -20,13 +20,13 @@ urlpatterns = \
     patterns('',
              url(r'^$', views.Index.as_view(), name='index'),
              url(r'^create/$', views.Create.as_view(), name='create'),
-             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/$', views.Detail.as_view(), name='detail'),
-             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/update/$', views.Update.as_view(), name='update'),
-             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/unlink/', include(unl_pat, namespace='unlink')),
+             url(r'^(?P<pk>\d+)/$', views.Detail.as_view(), name='detail'),
+             url(r'^(?P<pk>\d+)/update/$', views.Update.as_view(), name='update'),
+             url(r'^(?P<pk>\d+)/unlink/', include(unl_pat, namespace='unlink')),
              # Add comment to ticket
-             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/reply', views.Reply.as_view(), name='reply'),
+             url(r'^(?P<pk>\d+)/reply', views.Reply.as_view(), name='reply'),
              # Assign ticket to $me.
-             url(r'^(?P<environment>\w+)-(?P<pk>\d+)/seize', views.Seize.as_view(), name='seize'),
+             url(r'^(?P<pk>\d+)/seize', views.Seize.as_view(), name='seize'),
              # view or update existing comment, pk is now pk of the comment itself.
              url(r'^comment/', include(com_pat, namespace='comment')),
              # /tickets/filter/'needle'/  where needle == 'environment|company[slug]'

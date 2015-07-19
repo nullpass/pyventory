@@ -1,7 +1,7 @@
-# inventory/domain/forms.py
-#
 from django import forms
+
 from . import models
+
 
 class DomainForm(forms.ModelForm):
 
@@ -9,7 +9,6 @@ class DomainForm(forms.ModelForm):
         fields = (
             'name',
             'company',
-            'notes',
-            'doc_url',
+            'sla_policy',
         )
         model = models.Domain

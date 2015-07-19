@@ -103,15 +103,6 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            notes='Employee VPN site. Notify DSD _and_ JC of any outages.')
                     good(self, this)
                 #
-                this = inventory.category.models.Category
-                dropall(this)
-                if not this.objects.all():
-                    inject(this, name='physical')
-                    inject(this, name='virtual')
-                    inject(this, name='blade')
-                    inject(this, name='imaginary')
-                    good(self, this)
-                #
                 this = inventory.domain.models.Domain
                 dropall(this)
                 if not this.objects.all():
@@ -133,29 +124,18 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            company=company.models.Company.objects.last())
                     good(self, this)
                 #
-                this = inventory.environment.models.Environment
-                dropall(this)
-                if not this.objects.all():
-                    inject(this, name='PROD', notes='Production, all changes require approved change control request.')
-                    inject(this, name='DEV', notes='Development, check with Dave before bouncing servers/apps.')
-                    good(self, this)
-                #
                 this = inventory.machine.models.Server
                 dropall(this)
                 if not this.objects.all():
                     inject(this,
                            name='mail01',
                            domain=inventory.domain.models.Domain.objects.get(name='prod.example.tld'),
-                           environment=inventory.environment.models.Environment.objects.get(name='PROD'),
-                           category=inventory.category.models.Category.objects.get(name='physical'),
-                           company=company.models.Company.objects.first(),
+                           category='10',
                            )
                     inject(this,
                            name='mail01',
                            domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
-                           environment=inventory.environment.models.Environment.objects.get(name='DEV'),
-                           category=inventory.category.models.Category.objects.get(name='virtual'),
-                           company=company.models.Company.objects.first(),
+                           category='30',
                            )
                     good(self, this)
                 #
@@ -164,13 +144,11 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this,
                            body=_li,
-                           company=company.models.Company.objects.first(),
-                           environment=inventory.environment.models.Environment.objects.first(),
+                           domain=inventory.domain.models.Domain.objects.first(),
                            )
                     inject(this,
                            body=_il,
-                           company=company.models.Company.objects.last(),
-                           environment=inventory.environment.models.Environment.objects.last(),
+                           domain=inventory.domain.models.Domain.objects.last(),
                            )
                     good(self, this)
                 #

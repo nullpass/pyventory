@@ -12,7 +12,5 @@ class ServerForm(ModelForm):
         fields = (
             'name',
             'domain',
-            'environment',
-            'category',
             )
         model = models.Server

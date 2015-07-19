@@ -2,50 +2,42 @@ import re
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 from pyventory.models import UltraModel
-
-from inventory.environment.models import Environment
 from inventory.machine.models import Server
-from company.models import Company
-
+from inventory.domain.models import Domain
 
 def link_related(self):
     """
     Find and automatically link servers and/or other tickets if object names are mentioned in self.{name|body}
-    Will only link objects in same environment.
+    Will only link objects in same domain.
     """
     separator = '[,:\. <>\[\];\r\n]+'
     try:
-        environment = self.environment
-        # company = self.company
+        domain = self.domain
         ticket = self
         paragraph = re.split(separator, self.body)
     except AttributeError:
-        environment = self.ticket.environment
-        # company = self.ticket.company
+        domain = self.ticket.domain
         ticket = self.ticket
         paragraph = re.split(separator, self.name)
-    # server_list = Server.objects.filter(environment=environment, company=company).values_list('name', flat=True)
-    server_list = Server.objects.filter(environment=environment).values_list('name', flat=True)
+    server_list = Server.objects.filter(domain=domain).values_list('name', flat=True)
     for this_word in paragraph:
         if this_word in server_list:
             try:
-                ticket.servers.add(Server.objects.get(environment=environment, name=this_word))
-                # ticket.servers.add(Server.objects.get(environment=environment, company=company, name=this_word))
+                ticket.servers.add(Server.objects.get(domain=domain, name=this_word))
             except ObjectDoesNotExist:
                 pass
-    words = re.findall('({0}\-\d+)'.format(environment), ' '.join(paragraph) )
+    words = re.findall('({0}\-\d+)'.format(domain), ' '.join(paragraph) )
     if words:
         for this_word in words:
             w = this_word.split('-')
             i = int(w[1])
             if i is not ticket.pk:
                 try:
-                    ticket.related_tickets.add(Ticket.objects.get(pk=i,environment=environment))
+                    ticket.related_tickets.add(Ticket.objects.get(pk=i,domain=domain))
                 except ObjectDoesNotExist:
                     pass
 
@@ -55,9 +47,7 @@ class Ticket(UltraModel):
     Name is the title of the ticket.
     Comments are a different object.
 
-    Environment is usually prod/non-prod/dev/test/qa/lab/etc...
-    Company is the base-ownership attribute. It's the first place (but not the last place) we look
-        to see if a human can view/edit a ticket
+    Domain determines the environment and company that the ticket is for.
 
     Servers and related_tickets are foreign key buckets that allow us to mention other objects and
         get them dynamically linked.
@@ -69,8 +59,7 @@ class Ticket(UltraModel):
     """
     name = models.CharField(max_length=256)
     body = models.TextField()
-    environment = models.ForeignKey(Environment, null=True, on_delete=models.SET_NULL)
-    company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    domain = models.ForeignKey(Domain, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     STATUS_CHOICES = (
         ('10', 'New'),          # New, not assigned
@@ -96,13 +85,13 @@ class Ticket(UltraModel):
     is_approved = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse('ticket:detail', kwargs={'environment': self.environment, 'pk': self.id})
+        return reverse('ticket:detail', kwargs={'pk': self.id})
 
     def __str__(self):
         """
         ENV-ID is the 'ticket number' humans talk about.
         """
-        return '{0}-{1}'.format(self.environment, self.id)
+        return '{0}'.format(self.id)
 
     def save(self, *args, **kwargs):
         """

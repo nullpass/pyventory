@@ -12,8 +12,7 @@ class Ticket(forms.ModelForm):
     class Meta:
         fields = (
             'body',
-            'company',
-            'environment',
+            'domain',
             'status',
             'can_link_related',
             )

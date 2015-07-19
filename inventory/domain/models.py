@@ -15,6 +15,7 @@ class Domain(UltraModel):
     # Examples: alphabet.co.uk, abc.int, corp.abc.int
     name = models.CharField(validators=[RegexValidator('^[a-zA-Z][\-0-9a-z\.]+$')], max_length=254, unique=True)
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    sla_policy = models.TextField(verbose_name='SLA Policy')
 
     def get_absolute_url(self):
         return reverse('inventory:domain:update', kwargs={'pk': self.id})

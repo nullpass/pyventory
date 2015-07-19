@@ -1,0 +1,13 @@
+{% extends "Root.html" %}
+{% block content %}
+    <form action="" method="post">
+        <ul>
+            {{ form.as_ul }}
+            <li>Here we explain the SLA policy</li>
+            {% if object.created %}<li>Created: {{ object.created }}</li>{% endif %}
+            {% if object.modified %}<li>Last modified: {{ object.modified }}</li>{% endif %}
+        </ul>
+        {% csrf_token %}
+        <input type="submit" class="btn btn-sm btn-info" value="save" />
+    </form>
+{% endblock %}
