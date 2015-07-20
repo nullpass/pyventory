@@ -62,6 +62,7 @@ class Reply(LoginRequiredMixin, generic.CreateView):
         self.object.ticket = get_object_or_404(Ticket, id=self.kwargs.get('pk'))
         self.object.user = self.request.user
         self.success_url = self.object.ticket.get_absolute_url()
+        self.success_url = '{0}#latest'.format(self.object.ticket.get_absolute_url())
         return super().form_valid(form)
 
 
@@ -71,6 +72,10 @@ class CommentUpdate(LoginRequiredMixin, generic.UpdateView):
     """
     form_class, model = forms.Reply, Comment
     template_name = 'ticket/form.html'
+
+    def form_valid(self, form):
+        self.success_url = '{0}#{1}'.format(self.object.ticket.get_absolute_url(), self.object.id)
+        return super().form_valid(form)
 
 
 class CommentDetail(LoginRequiredMixin, generic.DetailView):

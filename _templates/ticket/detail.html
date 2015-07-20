@@ -41,8 +41,18 @@
 
         <li><h4>comments:</h4></li>
         {% for this in object.comment_set.all %}
+            <li>By: {{ this.user }} At: {{ this.created }} -
+                [<a href="{{ this.get_absolute_url }}">edit</a>]
+                [<a id="{{ this.id }}" href="{{ this.get_absolute_url }}">url</a>]
+            </li>
             <li>
-                <a href="{{ this.get_absolute_url }}">{{ this.created }}</a> - {{ this|linebreaksbr }}
+                {% if this.created != this.modified %}(last changed:{{ this.modified }}){% endif %}
+            </li>
+            <li>
+                <blockquote>
+                    {{ this|linebreaksbr }}
+                </blockquote>
+
             </li>
         {% endfor %}
         <li>
@@ -54,4 +64,5 @@
         </li>
 
     </ul>
+<a id="latest"></a>
 {% endblock %}

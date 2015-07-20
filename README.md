@@ -5,7 +5,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 ### Next:
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
-* Reply: success url should include #shortcut to comment that was added/updated. Don't need messages() there.
 * Other: Audit FKs and add `, null=True, on_delete=models.SET_NULL` where needed.
 * Inventory: inventory object should themselves have can_link_related attrs to allow/block them being linked. Use case:
 "We were dumb and named a server 'outage', now it gets auto-linked all the time, we need to be able to stop it ever
