@@ -3,7 +3,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
 ### Next:
-* Auth: Basic local log(in|out), profile
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Reply: success url should include #shortcut to comment that was added/updated. Don't need messages() there.
