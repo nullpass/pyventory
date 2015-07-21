@@ -6,8 +6,7 @@
     <form action="" method="post">{% csrf_token %}
         <ul>Create new ticket:</ul>
         <ul>{{ form.body }} {{ form.body.errors }}</ul>
-        <ul>Customer: {{ form.company }} {{ form.company.errors }}</ul>
-        <ul>Environ: {{ form.environment }} {{ form.environment.errors }}</ul>
+        <ul>Customer: {{ form.domain }} {{ form.domain.errors }}</ul>
         <ul>{{ form.status.as_hidden }}</ul>
         <ul>{{ form.can_link_related.label }} {{ form.can_link_related }}</ul>
         <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>

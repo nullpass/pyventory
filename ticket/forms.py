@@ -7,7 +7,6 @@ class Ticket(forms.ModelForm):
     """
     Really?
     """
-    notes = forms.Textarea()
 
     class Meta:
         fields = (
