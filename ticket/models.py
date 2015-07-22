@@ -11,7 +11,7 @@ from inventory.domain.models import Domain
 
 def link_related(self):
     """
-    Find and automatically link servers and/or other tickets if object names are mentioned in self.{name|body}
+    Find and automatically link servers if object names are mentioned in self.{name|body}
     Will only link objects in same domain.
     """
     separator = '[,:\. <>\[\];\r\n]+'
@@ -30,16 +30,6 @@ def link_related(self):
                 ticket.servers.add(Server.objects.get(domain=domain, name=this_word))
             except ObjectDoesNotExist:
                 pass
-    words = re.findall('({0}\-\d+)'.format(domain), ' '.join(paragraph) )
-    if words:
-        for this_word in words:
-            w = this_word.split('-')
-            i = int(w[1])
-            if i is not ticket.pk:
-                try:
-                    ticket.related_tickets.add(Ticket.objects.get(pk=i,domain=domain))
-                except ObjectDoesNotExist:
-                    pass
 
 
 class Ticket(UltraModel):
