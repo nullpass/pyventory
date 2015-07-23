@@ -9,27 +9,21 @@ from pyventory.models import UltraModel
 from inventory.machine.models import Server
 from inventory.domain.models import Domain
 
-def link_related(self):
+def link_related(ticket, body):
     """
-    Find and automatically link servers if object names are mentioned in self.{name|body}
-    Will only link objects in same domain.
+    Find and automatically link servers if object names are mentioned in {body}
+    Will only link objects in same ticket.domain
     """
     separator = '[,:\. <>\[\];\r\n]+'
-    try:
-        domain = self.domain
-        ticket = self
-        paragraph = re.split(separator, self.body)
-    except AttributeError:
-        domain = self.ticket.domain
-        ticket = self.ticket
-        paragraph = re.split(separator, self.name)
-    server_list = Server.objects.filter(domain=domain).values_list('name', flat=True)
-    for this_word in paragraph:
-        if this_word in server_list:
+    body = body[:16384]  # Limit haystack size (sometimes users paste huge logs to ticket)
+    paragraph = re.split(separator, body)
+    servers = Server.objects.filter(domain=ticket.domain).values_list('name', flat=True)
+    for word in paragraph:
+        if word in servers:
             try:
-                ticket.servers.add(Server.objects.get(domain=domain, name=this_word))
-            except ObjectDoesNotExist:
-                pass
+                ticket.servers.add(Server.objects.get(domain=ticket.domain, name=word))
+            except ObjectDoesNotExist as msg:
+                print(msg)
 
 
 class Ticket(UltraModel):
@@ -98,7 +92,7 @@ class Ticket(UltraModel):
             self.name = '{0}'.format(body.split('\n')[0])  # Use first line if there is a line break.
         super().save(*args, **kwargs)
         if self.can_link_related:
-            link_related(self)
+            link_related(self, self.body)
 
 
 class Comment(UltraModel):
@@ -106,7 +100,7 @@ class Comment(UltraModel):
     A comment (or reply) to a ticket.
     """
     name = models.TextField(max_length=1024)
-    ticket = models.ForeignKey(Ticket, blank=True, null=True, on_delete=models.SET_NULL)
+    ticket = models.ForeignKey(Ticket, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     can_link_related = models.BooleanField(default=True)
 
@@ -116,4 +110,4 @@ class Comment(UltraModel):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.can_link_related:
-            link_related(self)
+            link_related(self.ticket, self.name)

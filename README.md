@@ -12,4 +12,7 @@ Pyventory - A not-ready-for-prime-time Dj project.
 * Tickets: I hate the way the views.Sieze() works, need a diff approach
 * Company: move status into the company model
 * Tickets: add link-related form/view to accomodate linking tickets together since we cannot autolink tickets now.
+* Tickets: Changing the domain of a ticket should be its own view.  
+* All: Add flat/original/raw views to Detail to view an object without html
+
 
