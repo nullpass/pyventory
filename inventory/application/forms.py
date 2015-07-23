@@ -6,6 +6,7 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         fields = (
             'name',
+            'can_relate',
             'notes',
             'doc_url',
         )

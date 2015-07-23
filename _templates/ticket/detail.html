@@ -42,7 +42,7 @@
         <li><h4>comments:</h4></li>
         {% for this in object.comment_set.all %}
             <li>By: {{ this.user }} At: {{ this.created }} -
-                [<a href="{{ this.get_absolute_url }}">edit</a>]
+                [<a href="{% url 'ticket:comment:update' pk=this.id %}">edit</a>]
                 [<a id="{{ this.id }}" href="{{ this.get_absolute_url }}">url</a>]
             </li>
             <li>

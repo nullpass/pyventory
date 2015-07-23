@@ -1,5 +1,3 @@
-# inventory/machine/forms.py
-
 from django.forms import ModelForm, CharField
 
 from . import models
@@ -12,5 +10,8 @@ class ServerForm(ModelForm):
         fields = (
             'name',
             'domain',
-            )
+            'can_relate',
+            'notes',
+            'doc_url',
+        )
         model = models.Server

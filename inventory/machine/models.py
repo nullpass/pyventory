@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
-from django.core.exceptions import ObjectDoesNotExist
 
 from pyventory.models import UltraModel
 from inventory.domain.models import Domain
@@ -11,7 +10,12 @@ class Server(UltraModel):
     """
     Physical, virtual, blade, imaginary; whatever form, server.
     """
-    name = models.CharField(validators=[RegexValidator('^[a-zA-Z0-9\.\-\_]+$')], max_length=32)
+    name = models.CharField(
+        validators=[RegexValidator('^[a-zA-Z0-9\.\-\_]+$')],
+        max_length=32,
+        verbose_name='hostname',
+        help_text='example: "mail01"',
+    )
     domain = models.ForeignKey(Domain)
     resides = models.ForeignKey('Server', null=True)
     CHOICES = (
@@ -30,6 +34,9 @@ class Server(UltraModel):
         choices=CHOICES,
         default=CHOICES[0][0]
     )
+    can_relate = models.BooleanField(default=True,
+                                     help_text='Allow tickets to automatically link to this object when referenced.',
+                                     )
 
     class Meta:
         unique_together = (("name", "domain"),)
@@ -46,7 +53,4 @@ class Server(UltraModel):
         return '{0}.{1}'.format(self.name, self.domain)
 
     def become_child(self, parent):
-        try:
-            self.resides = Server.objects.get(environment=self.domain, name=parent)
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist('Server {0}.{1} does not exist'.format(parent, self.domain))
+        self.resides = Server.objects.get(domain=self.domain, name=parent)

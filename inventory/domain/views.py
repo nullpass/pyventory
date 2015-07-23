@@ -21,3 +21,7 @@ class Create(LoginRequiredMixin, generic.CreateView):
     form_class, model = Form, Model
     template_name = 'inventory/domain/form.html'
 
+
+class Detail(LoginRequiredMixin, generic.DetailView):
+    form_class, model = Form, Model
+    template_name = 'inventory/domain/detail.html'

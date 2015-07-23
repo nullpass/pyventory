@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 
 from pyventory.models import UltraModel
 
+
 class Application(UltraModel):
     """
     In context this is usually a URL or name of part of a website.
@@ -13,7 +14,9 @@ class Application(UltraModel):
     Gone should be the days when an operator says only "the url is down".
     """
     name = models.CharField(max_length=1024, unique=True)
-    # can_link_related = models.BooleanField(default=True)
+    can_relate = models.BooleanField(default=True,
+                                     help_text='Allow tickets to automatically link to this object when referenced.',
+                                     )
 
     def get_absolute_url(self):
-        return reverse('inventory:application:update', kwargs={'pk': self.id})
+        return reverse('inventory:application:detail', kwargs={'pk': self.id})

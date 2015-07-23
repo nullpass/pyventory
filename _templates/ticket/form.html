@@ -1,15 +1,22 @@
 {% extends "Root.html" %}
 
-{% block pagetitle %}{{ object.name }}{% endblock pagetitle %}
+{% block pagetitle %}ticket/form.html{% endblock pagetitle %}
 
 {% block content %}
-    <form action="" method="post">
+    <h4></h4>
+    <form action="" method="post">{% csrf_token %}
         <ul>
             {{ form.as_ul }}
             {% if object.created %}<li>Created: {{ object.created }}</li>{% endif %}
             {% if object.modified %}<li>Last modified: {{ object.modified }}</li>{% endif %}
         </ul>
-        {% csrf_token %}
-        <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>
+        <ul>
+            <input type="submit" class="btn btn-sm btn-info" value="SAVE" />
+            {% if object.ticket.get_absolute_url %}
+                <a class="btn btn-sm btn-default" href="{{ object.ticket.get_absolute_url }}">Cancel</a>
+            {% elif object.get_absolute_url %}
+                <a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
+            {% endif %}
+        </ul>
     </form>
 {% endblock %}

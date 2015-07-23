@@ -9,6 +9,8 @@ from human.views import Login, Logout
 
 
 urlpatterns = patterns('',
+                       url(r'^recent/$', Profile.as_view(), name='recent'),
+                       #
                        url(r'^accounts/login', Login.as_view(), name='login'),
                        url(r'^accounts/logout', Logout.as_view(), name='logout'),
                        url(r'^accounts/profile/$', Profile.as_view(), name='profile'),

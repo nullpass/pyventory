@@ -1,0 +1,22 @@
+{% extends "Root.html" %}
+
+{% block pagetitle %}{{ object }}{% endblock pagetitle %}
+
+{% block content %}
+    <ul style="list-style:none">
+        <li>
+            <h4><a href="{% url 'inventory:application:index' %}">⬅️</a> | Application: {{ object }}</h4>
+        </li>
+        <li>
+            <blockquote>{{ object.notes }}</blockquote>
+        </li>
+        {% if object.doc_url %}
+        <li>
+            <a href="{{ object.doc_url }}" target="_blank">{{ object.doc_url }}</a>
+        </li>
+        {% endif %}
+        <li>
+            <a href="{% url 'inventory:application:update' pk=object.id %}">Edit</a> - Last updated: {{ object.modified }}
+        </li>
+    </ul>
+{% endblock %}

@@ -3,6 +3,7 @@
 
 {% block content %}
 <h1>{{ object_list.first.get_classname }}</h1>
+<h2>default/list.html</h2>
 <ol>
     {% for this in object_list %}
         <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
