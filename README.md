@@ -3,7 +3,8 @@ Pyventory - A not-ready-for-prime-time Dj project.
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
 ### Next:
-* Company: move status into the company model and update install wizard.
+* Root.html: take out the add links from drop-down and put them in index.html files.
+* Root.html: Add customer link to inventory drop-down next to domains, move servers&apps up.
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Other: Audit FKs and add `, null=True, on_delete=models.SET_NULL` where needed.
@@ -17,6 +18,4 @@ Pyventory - A not-ready-for-prime-time Dj project.
 * I hate the way the views.Sieze() works, need a diff approach. 
 * Current server.make_parent is so dumb, like really. Final version will rely on what users expect to see (if anything)
  when it fails.
-
-
-
+* Will upgrade to Dj 1.8 once python-social-auth is updated.

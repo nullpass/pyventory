@@ -68,24 +68,16 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':
             try:
                 #
-                this = company.models.Status
-                dropall(this)
-                if not this.objects.all():
-                    inject(this, name='PRE', notes='Pre-contract client, all work must be approved by VP.')
-                    inject(this, name='Active', notes='Active client.')
-                    inject(this, name='Decommissioned', notes='Previous client.')
-                    good(self, this)
-                #
                 this = company.models.Company
                 dropall(this)
                 if not this.objects.all():
-                    inject(this, name='My First Hosting Company, LLC.', notes='Corporate systems.',
-                           status=company.models.Status.objects.get(name='Active'))
-                    inject(this, name='Customer 1', notes='unsigned contract on table',
-                           status=company.models.Status.objects.get(name='PRE'),
+                    inject(this, name='Baby\'s First Hosting Company, LLC.', notes='Corporate systems.',
+                           status='50')
+                    inject(this, name='Our See Inc.', notes='unsigned contract on table',
+                           status='10',
                            customer_of=company.models.Company.objects.first())
-                    inject(this, name='Customer 2', notes='Banned in 1999',
-                           status=company.models.Status.objects.get(name='Decommissioned'),
+                    inject(this, name='Amazooogle Enterprises', notes='Banned in 1999',
+                           status='90',
                            customer_of=company.models.Company.objects.first())
                     good(self, this)
                 #
