@@ -2,7 +2,7 @@
 {% block pagetitle %}Servers{% endblock pagetitle %}
 
 {% block content %}
-<h2>Servers</h2>
+<h1>Servers <a href="{% url 'inventory:machine:server:create' %}">+</a>{# href=search>?< #}</h1>
 <ul>
     {% for this in object_list %}
         <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>

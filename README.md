@@ -3,8 +3,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
 ### Next:
-* Root.html: take out the add links from drop-down and put them in index.html files.
-* Root.html: Add customer link to inventory drop-down next to domains, move servers&apps up.
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Other: Audit FKs and add `, null=True, on_delete=models.SET_NULL` where needed.
@@ -13,6 +11,7 @@ Pyventory - A not-ready-for-prime-time Dj project.
 * All: Add flat/original/raw views to Detail to view an object without html
 
 ### Deep thoughts by Jack Example:
+* Cannot remember why I nested inventory modules, would be more useful if I undid that. There is no usable overlap.
 * The way domains are presented to attached objects needs some love. Simple bullet options may not work ideally but
  going to whole hand-holding-wizard route would be insulting to most prod users.
 * I hate the way the views.Sieze() works, need a diff approach. 

@@ -10,6 +10,7 @@ from .models import Ticket, Comment
 from . import forms
 from .functions import unlink_related
 
+
 class Index(LoginRequiredMixin, generic.ListView):
     """
     The default view for /tickets/
@@ -20,6 +21,7 @@ class Index(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return Ticket.objects.all().order_by('modified')[:16]
+
 
 class Update(LoginRequiredMixin, generic.UpdateView):
     """

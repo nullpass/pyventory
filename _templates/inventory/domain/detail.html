@@ -16,8 +16,16 @@
         <li>
             <a href="{% url 'inventory:domain:update' pk=object.id %}">Edit</a> - Last updated: {{ object.modified }}
         </li>
-        <li>
-
-        </li>
+    </ul>
+    <hr>
+    <h4>Recent tickets for this domain:</h4>
+    <ul>
+        {% for this in domain.ticket_set.all %}
+            <li><a href="{{ this.get_absolute_url }}">
+                #{{ this.id }}
+                ({{ this.get_status_display }})
+                {{ this.name|truncatechars:16 }}
+            </a></li>
+        {% endfor %}
     </ul>
 {% endblock %}

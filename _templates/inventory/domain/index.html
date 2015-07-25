@@ -1,1 +1,12 @@
-_templates/inventory/domain/index.html
+{% extends "Root.html" %}
+
+{% block pagetitle %}inventory/domain/index.html{% endblock pagetitle %}
+
+{% block content %}
+<h1>Domains <a href="{% url 'inventory:domain:create' %}">+</a>{# href=search>?< #}</h1>
+<ol>
+    {% for this in object_list %}
+        <li><a href="{{ this.get_absolute_url }}">{{ this }}</a> ({{ this.company }})</li>
+    {% endfor %}
+</ol>
+{% endblock %}

@@ -3,11 +3,12 @@
 {% block pagetitle %}ticket\index.html{% endblock pagetitle %}
 
 {% block content %}
-    <ol>
+    <ul style="list-style:none">
         {% for this in object_list %}
             <li>
-                <a href="{{ this.get_absolute_url }}">{{ this }} {{ this.name|truncatechars:64 }}</a>
+                ({{ this.get_status_display }}) {{ this.domain }}#{{ this }}
+                - "<a href="{{ this.get_absolute_url }}">{{ this.name|truncatechars:64 }}</a>"
             </li>
         {% endfor %}
-    </ol>
+    </ul>
 {% endblock %}

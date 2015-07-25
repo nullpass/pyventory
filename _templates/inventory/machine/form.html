@@ -21,7 +21,7 @@
                 {% if object.get_absolute_url %}
                     <a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
                 {% else %}
-                    <a class="btn btn-sm btn-default" href="{% url 'inventory:machine:index' %}">Cancel</a>
+                    <a class="btn btn-sm btn-default" href="{% url 'inventory:machine:server:index' %}">Cancel</a>
                 {% endif %}
             </li>
         </ul>

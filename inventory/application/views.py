@@ -10,7 +10,7 @@ from .models import Application as ThisModel
 
 class List(LoginRequiredMixin, generic.ListView):
     form_class, model = ThisForm, ThisModel
-    template_name = 'default/list.html'
+    template_name = 'inventory/application/index.html'
 
 
 class Update(LoginRequiredMixin, generic.UpdateView):

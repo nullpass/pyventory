@@ -42,14 +42,9 @@
                                 <li><a href="{% url 'inventory:index' %}">Home</a></li>
                                 <li role="separator" class="divider"></li>
                                 <!-- li class="dropdown-header">inventory\domains</li -->
+                                <li><a href="{% url 'inventory:machine:server:index' %}">Servers</a></li>
                                 <li><a href="{% url 'inventory:domain:index' %}">Domains</a></li>
-                                <li><a href="{% url 'inventory:domain:create' %}">add</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'inventory:application:index' %}">Application</a></li>
-                                <li><a href="{% url 'inventory:application:create' %}">add</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'inventory:machine:server:index' %}">Server</a></li>
-                                <li><a href="{% url 'inventory:machine:server:create' %}">add</a></li>
+                                <li><a href="{% url 'inventory:application:index' %}">Applications</a></li>
                             </ul>
                         </li>
                         <li class="dropdown{% block TicketsBlock %}{% endblock %}">

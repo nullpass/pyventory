@@ -9,7 +9,7 @@ from .models import Domain as Model
 
 class List(LoginRequiredMixin, generic.ListView):
     form_class, model = Form, Model
-    template_name = 'default/list.html'
+    template_name = 'inventory/domain/index.html'
 
 
 class Update(LoginRequiredMixin, generic.UpdateView):

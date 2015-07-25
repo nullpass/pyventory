@@ -5,7 +5,7 @@
 {% block content %}
     <ul style="list-style:none">
         <li>
-            #{{object.pk}} ({{ object.domain }}) |
+            <a href="{{ object.domain.get_absolute_url }}">{{ object.domain }}</a> | #{{object.pk}} |
             {{ object.created }} |
             (<u>{{ object.get_status_display }}{% if object.user %}, assigned to: {{ object.user }}{% endif %}</u>) |
             <a href="{% url 'ticket:seize' pk=object.id %}">assign to me</a> |
