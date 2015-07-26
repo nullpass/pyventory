@@ -17,9 +17,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'inventory.application',
     'inventory.domain',
     'inventory.machine',
+    'inventory',
     'company',
     'ticket',
 )

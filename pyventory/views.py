@@ -11,14 +11,14 @@ import inventory
 import ticket
 
 _li = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
+.mail01.
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 """
 
 _il = """First sentence, sans linebreak. Paleo post-ironic mixtape, twee heirloom stumptown Wess Wanderson four dollar toast Truffaut freegan health goth master cleanse.
-
+[mail01]
 Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to-table Helvetica cray migas narwhal
 cliche.
 Mlkshk small batch gluten-free migas."""
@@ -81,7 +81,7 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            customer_of=company.models.Company.objects.first())
                     good(self, this)
                 #
-                this = inventory.application.models.Application
+                this = inventory.models.Application
                 dropall(this)
                 if not this.objects.all():
                     inject(this,
@@ -128,6 +128,11 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            name='mail01',
                            domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
                            category='30',
+                           )
+                    inject(this,
+                           name='mail01',
+                           domain=inventory.domain.models.Domain.objects.last(),
+                           category='90',
                            )
                     good(self, this)
                 #

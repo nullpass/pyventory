@@ -36,18 +36,18 @@
                         <li class="{% block HomeView %}{% endblock %}">
                             <a class="navbar-brand" href="{% url 'home' %}">Pyventory!</a>
                         </li>
-                        <li class="dropdown{% block InventoryBlock %}{% endblock %}">
+                        <li class="dropdown{% block InventoryView %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url 'inventory:index' %}">Home</a></li>
-                                <li role="separator" class="divider"></li>
+                                <!--li><a href="{% url 'inventory:index' %}">Home</a></li>
+                                <li role="separator" class="divider"></li -->
                                 <!-- li class="dropdown-header">inventory\domains</li -->
                                 <li><a href="{% url 'inventory:machine:server:index' %}">Servers</a></li>
                                 <li><a href="{% url 'inventory:domain:index' %}">Domains</a></li>
                                 <li><a href="{% url 'inventory:application:index' %}">Applications</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown{% block TicketsBlock %}{% endblock %}">
+                        <li class="dropdown{% block TicketsView %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tickets <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{% url 'ticket:index' %}">My Queue</a></li>

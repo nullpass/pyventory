@@ -1,1 +1,48 @@
-inventory/detail.html
+{% extends "Root.html" %}
+
+{% block InventoryView %} active {% endblock %}
+
+{% block pagetitle %}{{ model.get_classname }}: {{ object }}{% endblock pagetitle %}
+
+{% block content %}
+    <h2 class="text-center">
+        <a class="small" href="{% url url_cancel %}">⬅️</a> |
+        {{ object }} |
+        <a class="small" href="{% url url_edit pk=object.id %}">edit</a>
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th class="text-right">Company:</th><td>{{ object.company }}</td>
+        </tr>
+        {% if object.sla_policy %}
+        <tr>
+            <th class="text-right">SLA policy:</th>
+            <td>{{ object.sla_policy|linebreaksbr }}</td>
+        </tr>
+        {% endif %}
+        <tr><th class="text-right">Notes:</th><td>{{ object.notes|linebreaksbr }}</td></tr>
+        <tr><th class="text-right">Last updated</th><td>{{ object.modified }}</td></tr>
+        <tr>
+            <th class="text-right">Recent tickets for this {{ model.get_classname|lower }}:</th>
+            <td>
+                <ul>
+                    {% for this in object.recent_tickets %}
+                        <li>
+                            <a href="{{ this.get_absolute_url }}">
+                                #{{ this.id }}
+                                ({{ this.get_status_display }})
+                                {{ this.name|truncatechars:32 }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <p>-none-</p>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right">{% if object.get_previous_by_created %}<a href="{{ object.get_previous_by_created.get_absolute_url }}">previous</a>{% endif %}</td>
+            <td class="text-left">{% if object.get_next_by_created %}<a href="{{ object.get_next_by_created.get_absolute_url }}">next</a>{% endif %}</td>
+        </tr>
+    </table>
+{% endblock %}

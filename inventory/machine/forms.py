@@ -11,6 +11,7 @@ class ServerForm(ModelForm):
             'name',
             'domain',
             'can_relate',
+            'category',
             'notes',
             'doc_url',
         )

@@ -8,7 +8,6 @@ from inventory.machine.models import Server
 
 from .models import Ticket, Comment
 from . import forms
-from .functions import unlink_related
 
 
 class Index(LoginRequiredMixin, generic.ListView):
@@ -97,7 +96,9 @@ class Unlink(LoginRequiredMixin, generic.DetailView):
     http_method_names = [u'get']
 
     def render_to_response(self, context, **response_kwargs):
-        unlink_related(self)
+        result = self.object.unlink_related(self)
+        if result is not None:
+            messages.info(self.request, 'Unlinked {0} from this ticket.'.format(result))
         return redirect(self.object.get_absolute_url())
 
 

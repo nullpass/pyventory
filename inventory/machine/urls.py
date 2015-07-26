@@ -11,6 +11,8 @@ ser_pat = patterns('',
                    # url(r'^filter/(?P<needle>[\w-]+)/$',     'inventory.views.ServerFilterView', name='filter'),
                    #
                    # url(r'^(?P<pk>\d+)/$',        views.Detail.as_view(), name='detail'),
+                   #
+                   # don't add detail yet, refactor servers to their own app first
                    url(r'^(?P<pk>\d+)/update$',  views.Update.as_view(), name='update'),
                    url(r'^create/$',             views.Create.as_view(), name='create'),
                    url(r'^$',                    views.List.as_view(),   name='index'),

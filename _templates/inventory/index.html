@@ -1,3 +1,19 @@
 {% extends "Root.html" %}
-{% block pagetitle %}inventory\index.html{% endblock pagetitle %}
-{% block content %}inventory\index.html{% endblock %}
+
+{% block InventoryView %} active {% endblock %}
+
+{% block pagetitle %}inventory\list.html{% endblock pagetitle %}
+
+{% block content %}
+<h1>
+    <a class="small" href="{% url 'inventory:index' %}">⬅️</a>
+    {# object_list.first.get_classname #}
+    {{ model.get_classname }}s
+    <a href="{{ url_create }}">+</a>{# href=search>?< #}</h1>
+<ol>
+    {% for this in object_list %}
+        <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+    {% endfor %}
+</ol>
+
+{% endblock %}

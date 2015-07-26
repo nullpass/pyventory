@@ -2,6 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 from pyventory.models import UltraModel
+from company.models import Company
 
 
 class Application(UltraModel):
@@ -13,10 +14,17 @@ class Application(UltraModel):
 
     Gone should be the days when an operator says only "the url is down".
     """
-    name = models.CharField(max_length=1024, unique=True)
+    name = models.CharField(max_length=1024,
+                            unique=True,
+                            help_text='FQDN of the app',
+                            )
+    company = models.ForeignKey(Company, default=None, null=True, on_delete=models.SET_NULL)
     can_relate = models.BooleanField(default=True,
                                      help_text='Allow tickets to automatically link to this object when referenced.',
                                      )
 
     def get_absolute_url(self):
         return reverse('inventory:application:detail', kwargs={'pk': self.id})
+
+    def recent_tickets(self):
+        return self.ticket_set.order_by('-modified').all()[:3]

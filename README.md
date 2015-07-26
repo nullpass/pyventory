@@ -2,13 +2,17 @@ Pyventory - A not-ready-for-prime-time Dj project.
 =============================================================
 **Uses Python 3.4 and Django 1.7 and a whole lot of love**
 
+
 ### Next:
+* Inventory: move all submods to inv.models
+* Inventory: Set up M2M for servers<->applications
 * Tickets: check for inventory.applications in link_related()
 * Tickets: put undo url in success message from unlink_related()
 * Other: Audit FKs and add `, null=True, on_delete=models.SET_NULL` where needed.
 * Tickets: add link-related form/view to accommodate linking tickets together since we cannot autolink tickets now.
 * Tickets: Changing the domain of a ticket should be its own view.  
 * All: Add flat/original/raw views to Detail to view an object without html
+
 
 ### Deep thoughts by Jack Example:
 * Cannot remember why I nested inventory modules, would be more useful if I undid that. There is no usable overlap.

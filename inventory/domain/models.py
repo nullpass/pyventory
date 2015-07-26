@@ -31,3 +31,6 @@ class Domain(UltraModel):
         """Force name to be lowercase"""
         self.name = self.name.lower()
         super().save(*args, **kwargs)
+
+    def recent_tickets(self):
+        return self.ticket_set.all()[:1]

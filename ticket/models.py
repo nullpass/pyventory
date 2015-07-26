@@ -1,13 +1,17 @@
 import re
+import datetime
 
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
 from inventory.machine.models import Server
 from inventory.domain.models import Domain
+from inventory.models import Application
+
 
 def link_related(ticket, body):
     """
@@ -62,6 +66,7 @@ class Ticket(UltraModel):
     # These usually get automatically updated based on contents of comments.
     servers = models.ManyToManyField(Server, null=True, blank=True)
     related_tickets = models.ManyToManyField('Ticket', null=True, blank=True)
+    applications = models.ManyToManyField(Application, null=True, blank=True)
     #
     # Hey guys, don't open _yet_another_ ticket in a completely different system just to get approval for work that is
     #   already fully described in this ticket. Instead, ask for approval in the ticket itself when needed.
@@ -94,6 +99,21 @@ class Ticket(UltraModel):
         if self.can_link_related:
             link_related(self, self.body)
 
+    def unlink_related(self, view):
+        """
+        Remove an object association from this ticket.
+        """
+        this = None
+        if view.kwargs.get('server'):
+            this = get_object_or_404(Server, id=view.kwargs.get('server'))
+            if this in self.servers.all():
+                self.servers.remove(this)
+        elif view.kwargs.get('ticket'):
+            this = get_object_or_404(Ticket, id=view.kwargs.get('ticket'))
+            if this in view.object.related_tickets.all():
+                self.related_tickets.remove(this)
+        return this
+
 
 class Comment(UltraModel):
     """
@@ -108,6 +128,14 @@ class Comment(UltraModel):
         return reverse('ticket:comment:detail', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
+        """
+        1. Save obj to DB, required if called during a CreateView, obj must exist in DB if we are to link_related()
+        2. If allowed, look for references to linkable objects, link if found.
+        3. Update the ticket's modified element without invoking ticket.save().
+            If we simply ran self.ticket.save() it would run link_related again and possibly re-add a relation
+            the user had removed. This may be a use-case landmine later on, but current method seems correct.
+        """
         super().save(*args, **kwargs)
         if self.can_link_related:
             link_related(self.ticket, self.name)
+        Ticket.objects.filter(pk=self.ticket.pk).update(modified=datetime.datetime.now())

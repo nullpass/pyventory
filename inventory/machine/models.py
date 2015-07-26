@@ -37,6 +37,7 @@ class Server(UltraModel):
     can_relate = models.BooleanField(default=True,
                                      help_text='Allow tickets to automatically link to this object when referenced.',
                                      )
+    # applications = models.ManyToManyField(Application)
 
     class Meta:
         unique_together = (("name", "domain"),)
