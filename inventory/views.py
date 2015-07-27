@@ -1,6 +1,5 @@
 from django.views import generic
 # from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
 
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
@@ -30,7 +29,7 @@ class ApplicationIndex(LoginRequiredMixin, StaticContextMixin, generic.ListView)
     template_name = 'inventory/index.html'
     static_context = {
         'model': model,
-        'url_create': reverse_lazy('inventory:application:create'),
+        'url_create': 'inventory:application:create',
     }
 
 

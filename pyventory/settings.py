@@ -1,14 +1,8 @@
-# pyventory\settings.py
+# BASE\settings.py
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from cfgpyventory import *
 
-import cfgpyventory
-SECRET_KEY = cfgpyventory.SECRET_KEY
-DEBUG = cfgpyventory.DEBUG
-TEMPLATE_DEBUG = cfgpyventory.TEMPLATE_DEBUG
-ALLOWED_HOSTS = cfgpyventory.ALLOWED_HOSTS
-DATABASES = cfgpyventory.DATABASES
-STATIC_URL = cfgpyventory.STATIC_URL
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -32,6 +26,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sslify.middleware.SSLifyMiddleware',  # use `SSLIFY_DISABLE = True` in dev
 )
 
 ROOT_URLCONF = 'pyventory.urls'

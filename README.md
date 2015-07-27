@@ -15,7 +15,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 
 ### Deep thoughts by Jack Example:
-* Cannot remember why I nested inventory modules, would be more useful if I undid that. There is no usable overlap.
 * The way domains are presented to attached objects needs some love. Simple bullet options may not work ideally but
  going to whole hand-holding-wizard route would be insulting to most prod users.
 * I hate the way the views.Sieze() works, need a diff approach. 
