@@ -11,5 +11,10 @@
         </ul>
         {% csrf_token %}
         <input type="submit" class="btn btn-sm btn-info" value="save" />
+        {% if object.get_absolute_url %}{# object update view #}
+            <a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
+        {% else %}{# object create view #}
+            <a class="btn btn-sm btn-default" href="{% url url_cancel %}">Cancel</a>
+        {% endif %}
     </form>
 {% endblock %}

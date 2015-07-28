@@ -12,7 +12,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory.domain',
-    'inventory.machine',
     'inventory',
     'company',
     'ticket',

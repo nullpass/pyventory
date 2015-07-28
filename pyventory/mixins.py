@@ -1,8 +1,10 @@
-# BASE/mixins.py
 """
+BASE/mixins.py
+
 Using django-braces for auth mixins now. Much Love to Kenneth.
 
 """
+
 from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import redirect

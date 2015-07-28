@@ -4,8 +4,6 @@ from django.shortcuts import get_object_or_404, redirect
 
 from braces.views import LoginRequiredMixin
 
-from inventory.machine.models import Server
-
 from .models import Ticket, Comment
 from . import forms
 

@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
-from inventory.machine.models import Server
+from inventory.models import Server
 from inventory.domain.models import Domain
 from inventory.models import Application
 

@@ -11,9 +11,11 @@
         <a class="small" href="{% url url_edit pk=object.id %}">edit</a>
     </h2>
     <table class="table table-striped">
-        <tr>
-            <th class="text-right">Company:</th><td>{{ object.company }}</td>
-        </tr>
+        {% if object.company %}
+            <tr>
+                <th class="text-right">Company:</th><td>{{ object.company }}</td>
+            </tr>
+        {% endif %}
         {% if object.sla_policy %}
         <tr>
             <th class="text-right">SLA policy:</th>

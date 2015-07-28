@@ -15,7 +15,7 @@ application_patterns = \
     patterns('',
              url(r'^create$',              views.ApplicationCreate.as_view(), name='create'),
              url(r'^(?P<pk>\d+)/$',        views.ApplicationDetail.as_view(), name='detail'),
-             url(r'^$',                    views.ApplicationIndex.as_view(),  name='index'),
+             url(r'^$',                    views.ApplicationList.as_view(),   name='list'),
              url(r'^update/(?P<pk>\d+)/$', views.ApplicationUpdate.as_view(), name='update'),
              )
 """
@@ -23,16 +23,25 @@ domain_patterns = \
     patterns('',
              url(r'^create$',              views.DomainCreate.as_view(), name='create'),
              url(r'^(?P<pk>\d+)/$',        views.DomainDetail.as_view(), name='detail'),
-             url(r'^$',                    views.DomainIndex.as_view(),  name='index'),
+             url(r'^$',                    views.DomainList.as_view(),   name='list'),
              url(r'^update/(?P<pk>\d+)/$', views.DomainUpdate.as_view(), name='update'),
              )
 """
 
+server_patterns = \
+    patterns('',
+             url(r'^create$',              views.ServerCreate.as_view(), name='create'),
+             url(r'^(?P<pk>\d+)/$',        views.ServerDetail.as_view(), name='detail'),
+             url(r'^$',                    views.ServerList.as_view(),   name='list'),
+             url(r'^update/(?P<pk>\d+)/$', views.ServerUpdate.as_view(), name='update'),
+             )
+
+
 urlpatterns = \
     patterns('',
-             url(r'^$', TemplateView.as_view(template_name='home.html'), name='index'),
+             url(r'^$', TemplateView.as_view(template_name='inventory/index.html'), name='index'),
              url(r'^application/', include(application_patterns, namespace='application')),
              url(r'^domain/', include('inventory.domain.urls', namespace='domain')),
-             url(r'^machine/', include('inventory.machine.urls', namespace='machine')),
+             url(r'^server/', include(server_patterns, namespace='server')),
              )
 

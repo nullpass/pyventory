@@ -13,10 +13,10 @@ class Application(forms.ModelForm):
             'doc_url',
         )
         model = models.Application
-"""
 
-class Server(ModelForm):
-    is_in = CharField(max_length=64, required=False)
+
+class Server(forms.ModelForm):
+    is_in = forms.CharField(max_length=64, required=False)
 
     class Meta:
         fields = (
@@ -39,5 +39,3 @@ class Domain(forms.ModelForm):
             'sla_policy',
         )
         model = models.Domain
-
-"""

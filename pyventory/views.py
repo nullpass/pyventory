@@ -116,7 +116,7 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            company=company.models.Company.objects.last())
                     good(self, this)
                 #
-                this = inventory.machine.models.Server
+                this = inventory.models.Server
                 dropall(this)
                 if not this.objects.all():
                     inject(this,
