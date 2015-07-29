@@ -8,9 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
-from inventory.models import Server
-from inventory.domain.models import Domain
-from inventory.models import Application
+from inventory.models import Server, Domain, Application
 
 
 def link_related(ticket, body):
@@ -24,10 +22,12 @@ def link_related(ticket, body):
     servers = Server.objects.filter(domain=ticket.domain).values_list('name', flat=True)
     for word in paragraph:
         if word in servers:
-            try:
-                ticket.servers.add(Server.objects.get(domain=ticket.domain, name=word))
-            except ObjectDoesNotExist as msg:
-                print(msg)
+            ticket.servers.add(Server.objects.get(domain=ticket.domain, name=word))
+    words = body.replace('\r', ' ').replace('\n', ' ').split(' ')
+    applications = Application.objects.filter(company=ticket.domain.company).values_list('name', flat=True)
+    for this in words:
+        if this in applications:
+            ticket.applications.add(Application.objects.get(company=ticket.domain.company, name=this))
 
 
 class Ticket(UltraModel):
@@ -110,8 +110,12 @@ class Ticket(UltraModel):
                 self.servers.remove(this)
         elif view.kwargs.get('ticket'):
             this = get_object_or_404(Ticket, id=view.kwargs.get('ticket'))
-            if this in view.object.related_tickets.all():
+            if this in self.related_tickets.all():
                 self.related_tickets.remove(this)
+        elif view.kwargs.get('application'):
+            this = get_object_or_404(Application, id=view.kwargs.get('application'))
+            if this in self.applications.all():
+                self.applications.remove(this)
         return this
 
 

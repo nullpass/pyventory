@@ -21,7 +21,7 @@ class Company(UltraModel):
         choices=STATUS_CHOICES,
         default=STATUS_CHOICES[0][0]
     )
-    customer_of = models.ForeignKey('Company', null=True)
+    customer_of = models.ForeignKey('Company', null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

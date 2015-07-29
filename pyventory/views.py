@@ -3,6 +3,8 @@ import time
 
 from django.views import generic
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 from braces.views import AnonymousRequiredMixin, SuperuserRequiredMixin, LoginRequiredMixin
 
@@ -10,18 +12,15 @@ import company
 import inventory
 import ticket
 
-_li = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-.mail01.
+_li = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+magna aliqua..mail01.
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-"""
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."""
 
-_il = """First sentence, sans linebreak. Paleo post-ironic mixtape, twee heirloom stumptown Wess Wanderson four dollar toast Truffaut freegan health goth master cleanse.
-[mail01]
-Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to-table Helvetica cray migas narwhal
-cliche.
-Mlkshk small batch gluten-free migas."""
+_il = """First sentence, sans linebreak. Paleo post-ironic mixtape, twee heirloom stumptown Wess Wanderson four dollar
+toast Truffaut freegan health goth master cleanse. [mail01]
+Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to-table Helvetica cray migas narwhal."""
 
 
 class Login(AnonymousRequiredMixin, generic.TemplateView):
@@ -64,8 +63,23 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['what'] = []
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':
+            #
+            # MAKE DEMO ACCOUNT FOR THE UNWASHED MASSES
+            User.objects.filter(username='demo').delete()
+            if not User.objects.filter(username='demo'):
+                User.objects.create(username='demo',
+                                    password=make_password('demo'),
+                                    first_name='D-D-DEMO',
+                                    last_name='DISK',
+                                    email='devnull@localhost',
+                                    )
+                messages.success(self.request, '{0} - Added: {1}'.format(
+                    time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
+                    User.objects.filter(username='demo')
+                ))
+            #
+            #
             try:
                 #
                 this = company.models.Company
@@ -95,7 +109,7 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            notes='Employee VPN site. Notify DSD _and_ JC of any outages.')
                     good(self, this)
                 #
-                this = inventory.domain.models.Domain
+                this = inventory.models.Domain
                 dropall(this)
                 if not this.objects.all():
                     inject(this,
@@ -121,17 +135,17 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this,
                            name='mail01',
-                           domain=inventory.domain.models.Domain.objects.get(name='prod.example.tld'),
+                           domain=inventory.models.Domain.objects.get(name='prod.example.tld'),
                            category='10',
                            )
                     inject(this,
                            name='mail01',
-                           domain=inventory.domain.models.Domain.objects.get(name='dev.example.tld'),
+                           domain=inventory.models.Domain.objects.get(name='dev.example.tld'),
                            category='30',
                            )
                     inject(this,
                            name='mail01',
-                           domain=inventory.domain.models.Domain.objects.last(),
+                           domain=inventory.models.Domain.objects.last(),
                            category='90',
                            )
                     good(self, this)
@@ -141,11 +155,11 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 if not this.objects.all():
                     inject(this,
                            body=_li,
-                           domain=inventory.domain.models.Domain.objects.first(),
+                           domain=inventory.models.Domain.objects.first(),
                            )
                     inject(this,
                            body=_il,
-                           domain=inventory.domain.models.Domain.objects.last(),
+                           domain=inventory.models.Domain.objects.last(),
                            )
                     good(self, this)
                 #

@@ -14,6 +14,7 @@ unl_pat = \
     patterns('',
              url(r'^server/(?P<server>\d+)/$', views.Unlink.as_view(), name='server'),
              url(r'^ticket/(?P<ticket>\d+)/$', views.Unlink.as_view(), name='ticket'),
+             url(r'^application/(?P<application>\d+)/$', views.Unlink.as_view(), name='application'),
              )
 
 urlpatterns = \

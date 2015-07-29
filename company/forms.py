@@ -2,7 +2,7 @@ from django import forms
 from . import models
 
 
-class CompanyForm(forms.ModelForm):
+class Company(forms.ModelForm):
 
     class Meta:
         fields = (

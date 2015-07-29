@@ -3,8 +3,49 @@ from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 
 from pyventory.models import UltraModel
-from company.models import Company
-from inventory.domain.models import Domain
+from company.models import Company  ## remember to move this one please ##
+
+
+class Domain(UltraModel):
+    """
+    This object defines the company, SLA policy and environment (prod/dev/qa) for other objects.
+
+    name does not need to resolve
+
+    examples:
+        prod.my-company.gov
+        dev.denver.hosting-company.corp
+        qa.india.customer.company.tld
+
+    You can name your domains whatever you want but the recommended scheme is:
+        {environment}.{companyname}[.{tld}]
+
+    This object is also used to determine security scope. By default objects can only link/reference other objects
+        in the same domain.
+
+    """
+    name = models.CharField(
+        validators=[RegexValidator('^[a-zA-Z][\-0-9a-z\.]+$')],
+        max_length=254,
+        unique=True,
+        help_text='example: "prod.company.tld"',
+    )
+    company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
+    sla_policy = models.TextField(
+        verbose_name='SLA Policy',
+        help_text='Briefly explain the up-time expectations of machines and applications in this domain.',
+    )
+
+    def get_absolute_url(self):
+        return reverse('inventory:domain:detail', kwargs={'pk': self.id})
+
+    def save(self, *args, **kwargs):
+        """Force name to be lowercase"""
+        self.name = self.name.lower()
+        super().save(*args, **kwargs)
+
+    def recent_tickets(self):
+        return self.ticket_set.all()[:1]
 
 
 class Application(UltraModel):
@@ -43,7 +84,7 @@ class Server(UltraModel):
         help_text='example: "mail01"',
     )
     domain = models.ForeignKey(Domain)
-    parent = models.ForeignKey('Server', null=True)
+    parent = models.ForeignKey('Server', null=True, on_delete=models.SET_NULL)
     CHOICES = (
         ('10', 'Rack-mounted server'),
         ('20', 'Virtual server (VMware)'),

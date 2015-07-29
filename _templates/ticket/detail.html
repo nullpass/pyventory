@@ -1,5 +1,7 @@
 {% extends "Root.html" %}
 
+{% block TicketsView %} active {% endblock %}
+
 {% block pagetitle %}(#{{object.pk}}) {{ object.name|truncatechars:32 }}{% endblock pagetitle %}
 
 {% block content %}
@@ -16,27 +18,39 @@
             <p>{{ object.body|linebreaksbr }}</p>
         </li>
         {% if object.servers.count > 0 %}
-        <h4>related servers:</h4>
-        {% for this in object.servers.all %}
-            <li>
-                [<a href="{% url 'ticket:unlink:server' pk=object.id server=this.pk %}">x</a>]
-                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
-            </li>
-        {% empty %}
-            <li>[none]</li>
-        {% endfor %}
+            <h4>related servers:</h4>
+            {% for this in object.servers.all %}
+                <li>
+                    [<a href="{% url 'ticket:unlink:server' pk=object.id server=this.pk %}">x</a>]
+                    <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+                </li>
+            {% empty %}
+                <li>[none]</li>
+            {% endfor %}
         {% endif %}
 
         {% if object.related_tickets.count > 0 %}
-        <li><h4>related tickets:</h4></li>
-        {% for this in object.related_tickets.all %}
-            <li>
-                [<a href="{% url 'ticket:unlink:ticket' pk=object.id ticket=this.pk %}">x</a>]
-                <a href="{{ this.get_absolute_url }}">{{ this }}</a>
-            </li>
-        {% empty %}
-            <li>[none]</li>
-        {% endfor %}
+            <li><h4>related tickets:</h4></li>
+            {% for this in object.related_tickets.all %}
+                <li>
+                    [<a href="{% url 'ticket:unlink:ticket' pk=object.id ticket=this.pk %}">x</a>]
+                    <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+                </li>
+            {% empty %}
+                <li>[none]</li>
+            {% endfor %}
+        {% endif %}
+
+        {% if object.applications.count > 0 %}
+            <li><h4>related applications:</h4></li>
+            {% for this in object.applications.all %}
+                <li>
+                    [<a href="{% url 'ticket:unlink:application' pk=object.id application=this.pk %}">x</a>]
+                    <a href="{{ this.get_absolute_url }}">{{ this }}</a>
+                </li>
+            {% empty %}
+                <li>[none]</li>
+            {% endfor %}
         {% endif %}
 
         <li><h4>comments:</h4></li>
@@ -52,7 +66,6 @@
                 <blockquote>
                     {{ this|linebreaksbr }}
                 </blockquote>
-
             </li>
         {% endfor %}
         <li>

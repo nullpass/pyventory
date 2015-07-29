@@ -3,8 +3,6 @@ from django.views import generic
 
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
-from ticket.models import Ticket
-
 from . import forms
 from . import models
 
@@ -41,26 +39,6 @@ class ApplicationUpdate(LoginRequiredMixin, generic.UpdateView):
     template_name = 'inventory/form.html'
 
 
-"""
-class DomainCreate(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
-    form_class, model = forms.Domain, models.Domain
-    template_name = 'inventory/form.html'
-
-
-class DomainDetail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
-    form_class, model = forms.Domain, models.Domain
-    template_name = 'inventory/detail.html'
-
-
-class DomainList(LoginRequiredMixin, StaticContextMixin, generic.ListView):
-    form_class, model = forms.Domain, models.Domain
-    template_name = 'inventory/list.html'
-
-
-class DomainUpdate(LoginRequiredMixin, StaticContextMixin, generic.UpdateView):
-    form_class, model = forms.Domain, models.Domain
-    template_name = 'inventory/form.html'
-"""
 
 
 class ServerCreate(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
@@ -94,3 +72,34 @@ class ServerUpdate(LoginRequiredMixin, generic.UpdateView):
     form_class, model = forms.Server, models.Server
     template_name = 'inventory/form.html'
 
+
+class DomainCreate(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
+    form_class, model = forms.Domain, models.Domain
+    template_name = 'inventory/form.html'
+    static_context = {
+        'url_cancel': 'inventory:domain:list',
+    }
+
+
+class DomainDetail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
+    form_class, model = forms.Domain, models.Domain
+    template_name = 'inventory/detail.html'
+    static_context = {
+        'model': model,
+        'url_cancel': 'inventory:domain:list',
+        'url_edit': 'inventory:domain:update'
+    }
+
+
+class DomainList(LoginRequiredMixin, StaticContextMixin, generic.ListView):
+    form_class, model = forms.Domain, models.Domain
+    template_name = 'inventory/list.html'
+    static_context = {
+        'model': model,
+        'url_create': 'inventory:domain:create',
+    }
+
+
+class DomainUpdate(LoginRequiredMixin, generic.UpdateView):
+    form_class, model = forms.Domain, models.Domain
+    template_name = 'inventory/form.html'
