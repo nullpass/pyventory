@@ -5,11 +5,9 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 ### Next:
 * Tickets: put undo url in success message from unlink_related()
-* Other: Audit FKs and add `, null=True, on_delete=models.SET_NULL` where needed.
 * Tickets: add link-related form/view to accommodate linking tickets together since we cannot autolink tickets now.
 * Tickets: Changing the domain of a ticket should be its own view.  
 * All: Add flat/original/raw views to Detail to view an object without html
-* Company: needs urls, might need to be moved to inventory.models
 * Inventory: Set up view for servers<->applications
 
 

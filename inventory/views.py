@@ -103,3 +103,35 @@ class DomainList(LoginRequiredMixin, StaticContextMixin, generic.ListView):
 class DomainUpdate(LoginRequiredMixin, generic.UpdateView):
     form_class, model = forms.Domain, models.Domain
     template_name = 'inventory/form.html'
+
+
+class CompanyCreate(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
+    form_class, model = forms.Company, models.Company
+    template_name = 'inventory/form.html'
+    static_context = {
+        'url_cancel': 'inventory:company:list',
+    }
+
+
+class CompanyDetail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
+    form_class, model = forms.Company, models.Company
+    template_name = 'inventory/detail.html'
+    static_context = {
+        'model': model,
+        'url_cancel': 'inventory:company:list',
+        'url_edit': 'inventory:company:update'
+    }
+
+
+class CompanyList(LoginRequiredMixin, StaticContextMixin, generic.ListView):
+    form_class, model = forms.Company, models.Company
+    template_name = 'inventory/list.html'
+    static_context = {
+        'model': model,
+        'url_create': 'inventory:company:create',
+    }
+
+
+class CompanyUpdate(LoginRequiredMixin, generic.UpdateView):
+    form_class, model = forms.Company, models.Company
+    template_name = 'inventory/form.html'

@@ -35,10 +35,19 @@ domain_patterns = \
              url(r'^update/(?P<pk>\d+)/$', views.DomainUpdate.as_view(), name='update'),
              )
 
+company_patterns = \
+    patterns('',
+             url(r'^create$',              views.CompanyCreate.as_view(), name='create'),
+             url(r'^(?P<pk>\d+)/$',        views.CompanyDetail.as_view(), name='detail'),
+             url(r'^$',                    views.CompanyList.as_view(),   name='list'),
+             url(r'^update/(?P<pk>\d+)/$', views.CompanyUpdate.as_view(), name='update'),
+             )
+
 urlpatterns = \
     patterns('',
              url(r'^$', TemplateView.as_view(template_name='inventory/index.html'), name='index'),
              url(r'^application/', include(application_patterns, namespace='application')),
              url(r'^domain/', include(domain_patterns, namespace='domain')),
              url(r'^server/', include(server_patterns, namespace='server')),
+             url(r'^company/', include(company_patterns, namespace='company')),
              )

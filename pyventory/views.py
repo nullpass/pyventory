@@ -8,7 +8,6 @@ from django.contrib.auth.hashers import make_password
 
 from braces.views import AnonymousRequiredMixin, SuperuserRequiredMixin, LoginRequiredMixin
 
-import company
 import inventory
 import ticket
 
@@ -67,32 +66,31 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
             #
             # MAKE DEMO ACCOUNT FOR THE UNWASHED MASSES
             User.objects.filter(username='demo').delete()
-            if not User.objects.filter(username='demo'):
-                User.objects.create(username='demo',
-                                    password=make_password('demo'),
-                                    first_name='D-D-DEMO',
-                                    last_name='DISK',
-                                    email='devnull@localhost',
-                                    )
-                messages.success(self.request, '{0} - Added: {1}'.format(
-                    time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
-                    User.objects.filter(username='demo')
-                ))
+            User.objects.create(username='demo',
+                                password=make_password('demo'),
+                                first_name='D-D-DEMO',
+                                last_name='DISK',
+                                email='devnull@localhost',
+                                )
+            messages.success(self.request, '{0} - Added: {1}'.format(
+                time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
+                User.objects.filter(username='demo')
+            ))
             #
             #
             try:
                 #
-                this = company.models.Company
+                this = inventory.models.Company
                 dropall(this)
                 if not this.objects.all():
                     inject(this, name='Baby\'s First Hosting Company, LLC.', notes='Corporate systems.',
                            status='50')
                     inject(this, name='Our See Inc.', notes='unsigned contract on table',
                            status='10',
-                           customer_of=company.models.Company.objects.first())
+                           customer_of=inventory.models.Company.objects.first())
                     inject(this, name='Amazooogle Enterprises', notes='Banned in 1999',
                            status='90',
-                           customer_of=company.models.Company.objects.first())
+                           customer_of=inventory.models.Company.objects.first())
                     good(self, this)
                 #
                 this = inventory.models.Application
@@ -115,19 +113,19 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                     inject(this,
                            name='prod.example.tld',
                            notes='Example.tld\'s production servers.',
-                           company=company.models.Company.objects.first())
+                           company=inventory.models.Company.objects.first())
                     inject(this,
                            name='dev.example.tld',
                            notes='dev servers for example.tld',
-                           company=company.models.Company.objects.first())
+                           company=inventory.models.Company.objects.first())
                     inject(this,
                            name='prod.corp',
                            notes='Our production infrastructure.',
-                           company=company.models.Company.objects.first())
+                           company=inventory.models.Company.objects.first())
                     inject(this,
                            name='cdn.amazoogle.gov',
                            notes='Search and buy all on the same government-controlled portal!',
-                           company=company.models.Company.objects.last())
+                           company=inventory.models.Company.objects.last())
                     good(self, this)
                 #
                 this = inventory.models.Server

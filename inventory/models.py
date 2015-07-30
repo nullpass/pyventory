@@ -1,9 +1,39 @@
+"""
+    Inventory models; Company, Domain, Server, Application.
+
+"""
+from django.core.validators import RegexValidator
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.validators import RegexValidator
+from django.template.defaultfilters import slugify
 
 from pyventory.models import UltraModel
-from company.models import Company  ## remember to move this one please ##
+from pyventory.functions import UltraSlug
+
+class Company(UltraModel):
+    """
+    Your company and your client(s)
+    """
+    name = models.CharField(max_length=256, unique=True)
+    slug = models.SlugField(max_length=64, blank=True)
+    STATUS_CHOICES = (
+        ('10', 'pre-contract'),
+        ('50', 'active'),
+        ('90', 'decommissioned'),
+    )
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS_CHOICES,
+        default=STATUS_CHOICES[0][0]
+    )
+    customer_of = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        self.slug = UltraSlug(self.name, self)
+        return super().save()
+
+    def get_absolute_url(self):
+        return reverse('inventory:company:detail', kwargs={'pk': self.pk})
 
 
 class Domain(UltraModel):
@@ -122,3 +152,7 @@ class Server(UltraModel):
 
     def recent_tickets(self):
         return self.ticket_set.order_by('-modified')[:3].all()
+
+
+
+
