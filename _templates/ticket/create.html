@@ -8,8 +8,11 @@
     <form action="" method="post">{% csrf_token %}{{ form.status.as_hidden }}
         <ul>Create new ticket:</ul>
         <ul>{{ form.body }} {{ form.body.errors }}</ul>
-        <ul>{{ form.domain.label }} {{ form.domain }} {{ form.domain.errors }}</ul>
+        <ul>{{ form.domain }} {{ form.domain.errors }}</ul>
         <ul>{{ form.can_link_related.label }} {{ form.can_link_related }} {{ form.can_link_related.errors }}</ul>
-        <ul><input type="submit" class="btn btn-sm btn-info" value="SAVE" /></ul>
+        <ul>
+            <input type="submit" class="btn btn-sm btn-info" value="SAVE" />
+            <a class="btn btn-sm btn-default" href="{% url 'ticket:index' %}">Cancel</a>
+        </ul>
     </form>
 {% endblock %}

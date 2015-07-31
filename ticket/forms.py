@@ -17,6 +17,10 @@ class Ticket(forms.ModelForm):
             )
         model = models.Ticket
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['domain'].empty_label = ' -choose domain-'
+
 
 class Reply(forms.ModelForm):
     """

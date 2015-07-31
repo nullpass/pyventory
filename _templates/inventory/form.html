@@ -1,15 +1,17 @@
 {% extends "Root.html" %}
 
-{% block pagetitle %}inventory\\form.html{% endblock pagetitle %}
+{% block InventoryView %} active {% endblock %}
+
+{% block pagetitle %}{{ object }}{% endblock pagetitle %}
 
 {% block content %}
-    <form action="" method="post">
+    <form action="" method="post">{% csrf_token %}
         <ul>
             {{ form.as_ul }}
+            {# form.as_table #}
             {% if object.created %}<li>Created: {{ object.created }}</li>{% endif %}
             {% if object.modified %}<li>Last modified: {{ object.modified }}</li>{% endif %}
         </ul>
-        {% csrf_token %}
         <input type="submit" class="btn btn-sm btn-info" value="save" />
         {% if object.get_absolute_url %}{# object update view #}
             <a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>

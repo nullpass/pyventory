@@ -5,46 +5,73 @@
 {% block pagetitle %}{{ model.get_classname }}: {{ object }}{% endblock pagetitle %}
 
 {% block content %}
-    <h2 class="text-center">
-        <a class="small" href="{% url url_cancel %}">⬅️</a> |
-        {{ object }} |
-        <a class="small" href="{% url url_edit pk=object.id %}">edit</a>
-    </h2>
-    <table class="table table-striped">
-        {% if object.company %}
-            <tr>
-                <th class="text-right">Company:</th><td>{{ object.company }}</td>
-            </tr>
-        {% endif %}
-        {% if object.sla_policy %}
-        <tr>
-            <th class="text-right">SLA policy:</th>
-            <td>{{ object.sla_policy|linebreaksbr }}</td>
-        </tr>
-        {% endif %}
-        <tr><th class="text-right">Notes:</th><td>{{ object.notes|linebreaksbr }}</td></tr>
-        <tr><th class="text-right">Last updated</th><td>{{ object.modified }}</td></tr>
-        <tr>
-            <th class="text-right">Recent tickets for this {{ model.get_classname|lower }}:</th>
-            <td>
-                <ul>
-                    {% for this in object.recent_tickets %}
-                        <li>
-                            <a href="{{ this.get_absolute_url }}">
-                                #{{ this.id }}
-                                ({{ this.get_status_display }})
-                                {{ this.name|truncatechars:32 }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <p>-none-</p>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td class="text-right">{% if object.get_previous_by_created %}<a href="{{ object.get_previous_by_created.get_absolute_url }}">previous</a>{% endif %}</td>
-            <td class="text-left">{% if object.get_next_by_created %}<a href="{{ object.get_next_by_created.get_absolute_url }}">next</a>{% endif %}</td>
-        </tr>
-    </table>
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="text-center">{{ object }}</h2>
+        </div>
+        <div class="panel-body">
+            <table class="table table-responsive">
+                <tr>
+                    <th class="text-left" width="25%">
+                        {% if object.get_previous_by_created %}<a href="{{ object.get_previous_by_created.get_absolute_url }}">previous</a>{% endif %}
+                    <th class="text-right" width="25%">
+                        <a href="{% url url_cancel %}">index </a>
+                    </th>
+                    <th class="text-left" width="25%">
+                        <a href="{% url url_edit pk=object.id %}"> edit</a>
+                    <th class="text-right" width="25%">
+                        {% if object.get_next_by_created %}<a href="{{ object.get_next_by_created.get_absolute_url }}">next</a>{% endif %}
+                    </th>
+                </tr>
+            </table>
+            <table class="table table-striped table-responsive table-condensed">
+                {% if object.company %}
+                    <tr>
+                        <th class="col-md-6 text-right">Company:</th>
+                        <td class="col-md-6 text-left">{{ object.company }}</td>
+                    </tr>
+                {% endif %}
+                {% if object.sla_policy %}
+                <tr>
+                    <th class="col-md-6 text-right">SLA policy:</th>
+                    <td class="col-md-6 text-left">{{ object.sla_policy|linebreaksbr }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th class="col-md-6 text-right">Notes:</th>
+                    <td class="col-md-6 text-left">{{ object.notes|linebreaksbr }}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-6 text-right">Last updated</th>
+                    <td class="col-md-6 text-left">{{ object.modified }}</td>
+                </tr>
+                {% if object.doc_url %}
+                    <tr>
+                        <th class="col-md-6 text-right">Documentation:</th>
+                        <td class="col-md-6 text-left"><a href="{{ object.doc_url }}">{{ object.doc_url|truncatechars:32 }}</a></td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th class="col-md-6 text-right">Recent tickets for this {{ model.get_classname|lower }}:</th>
+                    <td class="col-md-6 text-left">
+                        <ul>
+                            {% for this in object.recent_tickets %}
+                                <li>
+                                    <a href="{{ this.get_absolute_url }}">
+                                        #{{ this.id }}
+                                        ({{ this.get_status_display }})
+                                        {{ this.name|truncatechars:16 }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <em>-none-</em>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

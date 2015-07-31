@@ -48,5 +48,6 @@ class Domain(forms.ModelForm):
             'name',
             'company',
             'sla_policy',
+            'doc_url',
         )
         model = models.Domain

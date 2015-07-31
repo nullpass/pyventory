@@ -34,7 +34,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block HomeView %}{% endblock %}">
-                            <a class="navbar-brand" href="{% url 'home' %}">Pyventory!</a>
+                            <a class="navbar-brand" href="{% url 'home' %}">{{ user.setting_set.company }}</a>
                         </li>
                         <li class="dropdown{% block InventoryView %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
@@ -67,9 +67,9 @@
                                     <span class="caret"> </span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{% url 'recent' %}">Recent Changes</a></li>
+                                    <li><a href="{# url 'recent' #}">Recent Changes</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{% url 'logout' %}">Log Out</a></li>
+                                    <li><a href="{% url 'human:logout' %}">Log Out</a></li>
                                     {% if user.is_superuser %}
                                         <li class="divider"></li>
                                         <li><a href="{% url 'shazzam' %}">Install Wizard!</a></li>
@@ -78,7 +78,7 @@
                             </li>
                         {% else %}
                             <li>
-                                <a href="{% url 'login' %}">Log in</a>
+                                <a href="{% url 'human:login' %}">Log in</a>
                             </li>
                         {% endif %}
                         <li>

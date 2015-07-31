@@ -13,6 +13,7 @@
             <a href="{% url 'ticket:seize' pk=object.id %}">assign to me</a> |
             <a href="{% url 'ticket:update' pk=object.id %}">edit ticket</a> |
         </li>
+        <li class="bg-warning"><b>SLA Policy:</b> {{ object.domain.sla_policy|linebreaksbr }}</li>
         <li><hr width="50%"></li>
         <li>
             <p>{{ object.body|linebreaksbr }}</p>

@@ -5,10 +5,10 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.template.defaultfilters import slugify
 
 from pyventory.models import UltraModel
 from pyventory.functions import UltraSlug
+
 
 class Company(UltraModel):
     """
@@ -27,6 +27,7 @@ class Company(UltraModel):
         default=STATUS_CHOICES[0][0]
     )
     customer_of = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+    # email_domains = ['', '', '']
 
     def save(self, *args, **kwargs):
         self.slug = UltraSlug(self.name, self)
@@ -65,6 +66,7 @@ class Domain(UltraModel):
         verbose_name='SLA Policy',
         help_text='Briefly explain the up-time expectations of machines and applications in this domain.',
     )
+    # force_ticket_approval_required = ...
 
     def get_absolute_url(self):
         return reverse('inventory:domain:detail', kwargs={'pk': self.id})
@@ -152,7 +154,3 @@ class Server(UltraModel):
 
     def recent_tickets(self):
         return self.ticket_set.order_by('-modified')[:3].all()
-
-
-
-
