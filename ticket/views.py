@@ -82,7 +82,7 @@ class CommentDetail(LoginRequiredMixin, generic.DetailView):
     View a single comment
     """
     form_class, model = forms.Reply, Comment
-    template_name = 'comment/detail.html'
+    template_name = 'ticket/comment.html'
 
 
 class Unlink(LoginRequiredMixin, generic.DetailView):

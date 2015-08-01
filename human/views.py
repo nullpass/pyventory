@@ -1,5 +1,5 @@
 """
-human/views.py
+    human/views.py
 
 """
 from django.views import generic
@@ -13,6 +13,7 @@ from braces.views import AnonymousRequiredMixin, SSLRequiredMixin
 
 from . import models
 
+
 class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
     """ log in page, require no user logged in """
     form_class, model = AuthenticationForm, User
@@ -25,12 +26,14 @@ class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
         if user is not None:
             if user.is_active:
                 login(self.request, user)
-                #
-                # account, created = models.Setting.objects.get_or_create(name=self.request.user)
-                #
+                account, created = models.Setting.objects.get_or_create(name=self.request.user)
+                count = user.company_set.count()
+                messages.success(self.request, 'Welcome back!')
                 if self.request.GET.get('next'):
                     self.success_url = self.request.GET['next']
-                messages.success(self.request, 'Welcome back!')
+                if count == 0:
+                    messages.warning(self.request, 'To begin please create a company for yourself.')
+                    self.success_url = reverse_lazy('inventory:company:create')
                 return super().form_valid(form)
         return super().form_invalid(form)
 

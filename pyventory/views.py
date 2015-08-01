@@ -58,6 +58,7 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
     """
     Inject usable default data
 
+    This is also a reasonable way to test things while we're still in alpha
     """
     template_name = 'install.html'
 
@@ -92,6 +93,8 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                     inject(this, name='Amazooogle Enterprises', notes='Banned in 1999',
                            status='90',
                            customer_of=inventory.models.Company.objects.first())
+                    inject(this, name='Dead Thread Orphanage', notes='Williamsburg, VA',
+                           status='50')
                     notify(self, this)
                 #
                 this = inventory.models.Application
@@ -185,7 +188,8 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            )
                     inject(this, name='Systems Administration',
                            company=inventory.models.Company.objects.first(),
-                           parent=human.models.Department.objects.get(name='Technical Operations')
+                           parent=human.models.Department.objects.get(name='Technical Operations'),
+                           email='ops@example.tld'
                            )
                     inject(this, name='Development',
                            company=inventory.models.Company.objects.first(),
@@ -194,31 +198,6 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                     inject(this, name='Information Security',
                            company=inventory.models.Company.objects.first(),
                            parent=human.models.Department.objects.get(name='Human Resources')
-                           )
-                    notify(self, this)
-                #
-                this = human.models.Title
-                truncate(this)
-                if not this.objects.all():
-                    inject(this, name='Jr. GWBasic Consultant',
-                           department=human.models.Department.objects.first())
-                    inject(this, name='Vice President of Fscking',
-                           department=human.models.Department.objects.first())
-                    inject(this, name='Principle Paper Pusher',
-                           department=human.models.Department.objects.first())
-                    inject(this, name='Sad guy who has to answer calls from end-users',
-                           department=human.models.Department.objects.first())
-                    inject(this, name='Sr Cloud Operations Engineer',
-                           department=human.models.Department.objects.first(),
-                           reports_to=this.objects.filter(name__contains='Fscking').first()
-                           )
-                    inject(this, name='Jr Systems Engineer',
-                           department=human.models.Department.objects.get(name='Systems Engineering'),
-                           reports_to=this.objects.filter(name__contains='Fscking').first()
-                           )
-                    inject(this, name='Sr Systems Administrator',
-                           department=human.models.Department.objects.get(name='Systems Administration'),
-                           reports_to=this.objects.filter(name__contains='Fscking').first()
                            )
                     notify(self, this)
             except Exception as msg:

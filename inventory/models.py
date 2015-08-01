@@ -3,11 +3,14 @@
 
 """
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
 
 from pyventory.models import UltraModel
 from pyventory.functions import UltraSlug
+
+# from human.models import Department
 
 
 class Company(UltraModel):
@@ -27,11 +30,29 @@ class Company(UltraModel):
         default=STATUS_CHOICES[0][0]
     )
     customer_of = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # email_domains = ['', '', '']
 
     def save(self, *args, **kwargs):
         self.slug = UltraSlug(self.name, self)
-        return super().save()
+        super().save()
+        if hasattr(self.user, 'setting_set'):
+            user_settings = self.user.setting_set.get()
+        else:
+            # If there is no real user attached to this then don't bother with making departments.
+            return
+        #
+        #
+        if self.department_set.count() == 0:
+            dept = self.department_set.create(name='_default_department', company=self)
+            #
+            # If you just created your first company and are not yet in someone's department then force dept to this.
+            if not user_settings.employer():
+                user_settings.department = dept
+                user_settings.save()
+        #
+        #
+        return
 
     def get_absolute_url(self):
         return reverse('inventory:company:detail', kwargs={'pk': self.pk})

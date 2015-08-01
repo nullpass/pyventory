@@ -3,6 +3,7 @@ from django.views import generic
 
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
+from human.models import Department
 from . import forms
 from . import models
 
@@ -111,6 +112,12 @@ class CompanyCreate(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
     static_context = {
         'url_cancel': 'inventory:company:list',
     }
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.customer_of = self.request.user.setting_set.get().employer()
+        return super().form_valid(form)
 
 
 class CompanyDetail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):

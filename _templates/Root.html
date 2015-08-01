@@ -34,7 +34,9 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block HomeView %}{% endblock %}">
-                            <a class="navbar-brand" href="{% url 'home' %}">{{ user.setting_set.company }}</a>
+                            <a class="navbar-brand" href="{% url 'home' %}">
+                                {{ user.setting_set.get.employer }}
+                            </a>
                         </li>
                         <li class="dropdown{% block InventoryView %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
