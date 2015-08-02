@@ -1,5 +1,5 @@
 """
-
+    Human.models.py
 
 """
 from django.db import models
@@ -12,8 +12,9 @@ from inventory.models import Company
 
 
 class Department(UltraModel):
-    """
+    """ A group object with reverse keys to Users that is the foundation for determining object and view access scope.
 
+    Do not move this to inventory, a Department is only ever a group of people and therefor belongs in the human app.
     """
     name = models.CharField(max_length=256)
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
@@ -29,9 +30,7 @@ class Department(UltraModel):
         return string
 
     def save(self, *args, **kwargs):
-        """
-        Enforce company scope
-        """
+        """ Enforce company scope """
         if self.parent is not None:
             if self.parent.company != self.company:
                 msg = 'Cannot assign parent department outside current company "{0}".'
@@ -40,14 +39,14 @@ class Department(UltraModel):
 
 
 class Setting(UltraModel):
-    """
-    lazy extension of user class
-    """
+    """ A lazy extension of the user class """
     name = models.ForeignKey(User)
     department = models.ForeignKey(Department, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=256, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
 
+    @property
     def employer(self):
-        if self.name.setting_set.get().department:
-            return self.name.setting_set.get().department.company
+        if self.department:
+            return self.department.company
         return None

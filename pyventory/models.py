@@ -28,5 +28,6 @@ class UltraModel(models.Model):
     def __str__(self):
         return str(self.name)
 
-    def get_classname(self):
+    @property
+    def name_of_class(self):
         return self.__class__.__name__

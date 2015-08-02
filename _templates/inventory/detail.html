@@ -2,7 +2,7 @@
 
 {% block InventoryView %} active {% endblock %}
 
-{% block pagetitle %}{{ model.get_classname }}: {{ object }}{% endblock pagetitle %}
+{% block pagetitle %}{{ model.name_of_class }}: {{ object }}{% endblock pagetitle %}
 
 {% block content %}
 <div class="col-md-6">
@@ -14,22 +14,42 @@
             <table class="table table-responsive">
                 <tr>
                     <th class="text-left" width="25%">
-                        {% if object.get_previous_by_created %}<a href="{{ object.get_previous_by_created.get_absolute_url }}">previous</a>{% endif %}
+                        {% if object.get_prev %}
+                            <a href="{{ object.get_prev.get_absolute_url }}">previous</a>
+                        {% endif %}
                     <th class="text-right" width="25%">
                         <a href="{% url url_cancel %}">index </a>
                     </th>
                     <th class="text-left" width="25%">
                         <a href="{% url url_edit pk=object.id %}"> edit</a>
                     <th class="text-right" width="25%">
-                        {% if object.get_next_by_created %}<a href="{{ object.get_next_by_created.get_absolute_url }}">next</a>{% endif %}
+                        {% if object.get_next %}
+                            <a href="{{ object.get_next.get_absolute_url }}">next</a>
+                        {% endif %}
                     </th>
                 </tr>
             </table>
             <table class="table table-striped table-responsive table-condensed">
+                {% if object.status %}
+                    <tr>
+                        <th class="col-md-6 text-right">Status:</th>
+                        <td class="col-md-6 text-left">{{ object.get_status_display }}</td>
+                    </tr>
+                {% endif %}
                 {% if object.company %}
                     <tr>
                         <th class="col-md-6 text-right">Company:</th>
-                        <td class="col-md-6 text-left">{{ object.company }}</td>
+                        <td class="col-md-6 text-left">
+                            <a href="{{ object.company.get_absolute_url }}">{{ object.company }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if object.customer_of %}
+                    <tr>
+                        <th class="col-md-6 text-right">Customer of:</th>
+                        <td class="col-md-6 text-left">
+                            <a href="{{ object.customer_of.get_absolute_url }}">{{ object.customer_of }}</a>
+                        </td>
                     </tr>
                 {% endif %}
                 {% if object.sla_policy %}
@@ -43,17 +63,19 @@
                     <td class="col-md-6 text-left">{{ object.notes|linebreaksbr }}</td>
                 </tr>
                 <tr>
-                    <th class="col-md-6 text-right">Last updated</th>
+                    <th class="col-md-6 text-right">Last updated:</th>
                     <td class="col-md-6 text-left">{{ object.modified }}</td>
                 </tr>
                 {% if object.doc_url %}
                     <tr>
                         <th class="col-md-6 text-right">Documentation:</th>
-                        <td class="col-md-6 text-left"><a href="{{ object.doc_url }}">{{ object.doc_url|truncatechars:32 }}</a></td>
+                        <td class="col-md-6 text-left">
+                            <a href="{{ object.doc_url }}">{{ object.doc_url|truncatechars:32 }}</a>
+                        </td>
                     </tr>
                 {% endif %}
                 <tr>
-                    <th class="col-md-6 text-right">Recent tickets for this {{ model.get_classname|lower }}:</th>
+                    <th class="col-md-6 text-right">Recent tickets for this {{ model.name_of_class|lower }}:</th>
                     <td class="col-md-6 text-left">
                         <ul>
                             {% for this in object.recent_tickets %}
@@ -70,6 +92,31 @@
                         </ul>
                     </td>
                 </tr>
+                {% if object.company_set.all %}
+                    <tr>
+                        <th class="col-md-6 text-right">Customer Companies:</th>
+                        <td class="col-md-6 text-left">
+                            <ul>
+                                {% for this in object.company_set.all %}
+                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if object.domain_set.all %}
+                    <tr>
+                        <th class="col-md-6 text-right">Domains:</th>
+                        <td class="col-md-6 text-left">
+                            <ul>
+                                {% for this in object.domain_set.all %}
+                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
+
             </table>
         </div>
     </div>

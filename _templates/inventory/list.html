@@ -7,8 +7,8 @@
 {% block content %}
 <h1>
     <a class="small" href="{% url 'inventory:index' %}">⬅️</a>
-    {# object_list.first.get_classname #}
-    {{ model.get_classname }}s
+    {# object_list.first.name_of_class #}
+    {{ model.name_of_class }}s
     <a href="{% url url_create %}">+</a>{# href=search>?< #}</h1>
 <ol>
     {% for this in object_list %}

@@ -2,15 +2,15 @@
     Inventory models; Company, Domain, Server, Application.
 
 """
+from itertools import chain
+
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
 
 from pyventory.models import UltraModel
-from pyventory.functions import UltraSlug
-
-# from human.models import Department
 
 
 class Company(UltraModel):
@@ -18,7 +18,6 @@ class Company(UltraModel):
     Your company and your client(s)
     """
     name = models.CharField(max_length=256, unique=True)
-    slug = models.SlugField(max_length=64, blank=True)
     STATUS_CHOICES = (
         ('10', 'pre-contract'),
         ('50', 'active'),
@@ -33,26 +32,48 @@ class Company(UltraModel):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # email_domains = ['', '', '']
 
+    print('move these to the views please, we already have url_* variables')
+    def get_next(self):
+        # Get next by PK from only objects user can see
+        employer = Company.objects.filter(pk=self.user.setting_set.get().employer.pk)
+        customers = Company.objects.filter(customer_of=employer)
+        qs = employer | customers
+        return qs.filter(pk__gt=self.pk)[:1].get()
+
+    def get_prev(self):
+        # Get previous by PK from only objects user can see
+        employer = Company.objects.filter(pk=self.user.setting_set.get().employer.pk)
+        customers = Company.objects.filter(customer_of=employer)
+        qs = employer | customers
+        return qs.filter(pk__lt=self.pk)[:1].get()
+
     def save(self, *args, **kwargs):
-        self.slug = UltraSlug(self.name, self)
-        super().save()
-        if hasattr(self.user, 'setting_set'):
+        """ Handle default child objects on Company create.
+
+        In order to ensure new users can get started as quickly as possible
+            we create a default Department and default Domain when adding a
+            new Company.
+            If the user is not already in someone's Department we assign
+            them to the default Department created.
+
+        The attribute and count check for 'setting_set' is needed because
+            Companys can be created from the install view or via tests,
+            in those cases there is no human.Setting model attached.
+        """
+        if hasattr(self.user, 'setting_set') and not self.pk:
             user_settings = self.user.setting_set.get()
-        else:
-            # If there is no real user attached to this then don't bother with making departments.
-            return
-        #
-        #
-        if self.department_set.count() == 0:
+            slug = slugify(self.name)
+            super().save(*args, **kwargs)
             dept = self.department_set.create(name='_default_department', company=self)
-            #
-            # If you just created your first company and are not yet in someone's department then force dept to this.
-            if not user_settings.employer():
+            if not user_settings.employer:
                 user_settings.department = dept
                 user_settings.save()
-        #
-        #
-        return
+            Domain.objects.create(name='prod.{0}.local'.format(slug),
+                                  company=self,
+                                  notes='Default domain created automatically when its company was added.',
+                                  sla_policy='No SLA policy has yet been added for this domain.',
+                                  )
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('inventory:company:detail', kwargs={'pk': self.pk})
@@ -70,7 +91,7 @@ class Domain(UltraModel):
         qa.india.customer.company.tld
 
     You can name your domains whatever you want but the recommended scheme is:
-        {environment}.{companyname}[.{tld}]
+        {environment}[.{location}].{companyname}[.{tld}]
 
     This object is also used to determine security scope. By default objects can only link/reference other objects
         in the same domain.
@@ -80,7 +101,7 @@ class Domain(UltraModel):
         validators=[RegexValidator('^[a-zA-Z][\-0-9a-z\.]+$')],
         max_length=254,
         unique=True,
-        help_text='example: "prod.company.tld"',
+        help_text='example: "prod.va.us.my-company.tld"',
     )
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
     sla_policy = models.TextField(
@@ -88,6 +109,7 @@ class Domain(UltraModel):
         help_text='Briefly explain the up-time expectations of machines and applications in this domain.',
     )
     # force_ticket_approval_required = ...
+    # name_servers = delimited ip addresses
 
     def get_absolute_url(self):
         return reverse('inventory:domain:detail', kwargs={'pk': self.id})

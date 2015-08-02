@@ -7,6 +7,7 @@ class Company(forms.ModelForm):
     class Meta:
         fields = (
             'name',
+            'status',
             'notes',
             'doc_url',
         )

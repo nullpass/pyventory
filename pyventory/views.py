@@ -35,7 +35,7 @@ def notify(self, this):
         time.strftime('%c', time.gmtime()),
         this.objects.all()
     )
-    print(msg)
+    # print(msg)
     messages.success(self.request, msg)
 
 
@@ -44,6 +44,7 @@ def inject(obj, **kwargs):
     Force insert of arbitrary data
     """
     obj(**kwargs).save()
+    return
 
 
 def truncate(this):
@@ -74,9 +75,11 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                                 last_name='DISK',
                                 email='devnull@localhost',
                                 )
+            human.models.Setting.objects.exclude(name=User.objects.get(username='admin')).delete()
+            human.models.Setting.objects.create(name=User.objects.get(username='demo'))
             messages.success(self.request, '{0} - Added: {1}'.format(
                 time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
-                User.objects.filter(username='demo')
+                User.objects.get(username='demo')
             ))
             #
             #
@@ -86,17 +89,17 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                 truncate(this)
                 if not this.objects.all():
                     inject(this, name='Baby\'s First Hosting Company, LLC.', notes='Corporate systems.',
-                           status='50')
-                    inject(this, name='Our See Inc.', notes='unsigned contract on table',
-                           status='10',
-                           customer_of=inventory.models.Company.objects.first())
-                    inject(this, name='Amazooogle Enterprises', notes='Banned in 1999',
-                           status='90',
-                           customer_of=inventory.models.Company.objects.first())
-                    inject(this, name='Dead Thread Orphanage', notes='Williamsburg, VA',
-                           status='50')
+                           status='50',
+                           user=User.objects.get(username='demo'))
+                    inject(this, name='Dead Thread Orphanage', notes='Banned in 1999', status='90',
+                           customer_of=inventory.models.Company.objects.first(),
+                           user=User.objects.get(username='demo'))
+                    inject(this, name='Amazooogle Enterprises', notes='Williamsburg, VA', status='10',
+                           customer_of=inventory.models.Company.objects.first(),
+                           user=User.objects.get(username='demo'))
                     notify(self, this)
                 #
+                # return context
                 this = inventory.models.Application
                 truncate(this)
                 if not this.objects.all():
@@ -173,31 +176,6 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                     inject(this,
                            body=_il,
                            domain=inventory.models.Domain.objects.last(),
-                           )
-                    notify(self, this)
-                #
-                this = human.models.Department
-                truncate(this)
-                if not this.objects.all():
-                    inject(this, name='Sales & Consulting', company=inventory.models.Company.objects.first())
-                    inject(this, name='Human Resources', company=inventory.models.Company.objects.first())
-                    inject(this, name='Technical Operations', company=inventory.models.Company.objects.first())
-                    inject(this, name='Systems Engineering',
-                           company=inventory.models.Company.objects.first(),
-                           parent=human.models.Department.objects.get(name='Technical Operations')
-                           )
-                    inject(this, name='Systems Administration',
-                           company=inventory.models.Company.objects.first(),
-                           parent=human.models.Department.objects.get(name='Technical Operations'),
-                           email='ops@example.tld'
-                           )
-                    inject(this, name='Development',
-                           company=inventory.models.Company.objects.first(),
-                           parent=human.models.Department.objects.get(name='Technical Operations')
-                           )
-                    inject(this, name='Information Security',
-                           company=inventory.models.Company.objects.first(),
-                           parent=human.models.Department.objects.get(name='Human Resources')
                            )
                     notify(self, this)
             except Exception as msg:
