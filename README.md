@@ -15,6 +15,9 @@ Pyventory - A not-ready-for-prime-time Dj project.
 * Inventory: Set up view for servers<->applications
 * Logging: start adding hooks
 * All: orphan finders
+* Inventory: Limit related object listing, but convert title to URL where all objs can be seen. ex: If there are 250
+Applications for a company only show the first 10, but make the "Application" row title a link to 
+'inventory/company/{pk}/applications' which would show all 250. Add '...' if total created than shown. 
 
 
 ### Deep thoughts by Jack Example:

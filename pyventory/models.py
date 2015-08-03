@@ -31,3 +31,12 @@ class UltraModel(models.Model):
     @property
     def name_of_class(self):
         return self.__class__.__name__
+
+    def prev_and_next(self, queryset):
+        """
+        For a given queryset return a tuple containing the previous and next
+            objects relative to `self` ordered by primary key
+
+            return (PREV, NEXT)
+        """
+        return (queryset.order_by('-pk').filter(pk__lt=self.pk)[:1], queryset.filter(pk__gt=self.pk)[:1])

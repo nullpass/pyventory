@@ -14,6 +14,7 @@ INSTALLED_APPS = (
     'inventory',
     'ticket',
     'human',
+    # 'social.apps.django_app.default',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,3 +49,21 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, '_templates'),
 )
+
+"""
+AUTHENTICATION_BACKENDS = (
+    'social.backends.open_id.OpenIdAuth',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+    'django.core.context_processors.request',
+)
+SOCIAL_AUTH_USER_MODEL = 'human.models.Account'
+
+"""

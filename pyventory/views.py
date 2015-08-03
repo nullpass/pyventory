@@ -35,7 +35,6 @@ def notify(self, this):
         time.strftime('%c', time.gmtime()),
         this.objects.all()
     )
-    # print(msg)
     messages.success(self.request, msg)
 
 
@@ -178,8 +177,7 @@ class Install(SuperuserRequiredMixin, generic.TemplateView):
                            domain=inventory.models.Domain.objects.last(),
                            )
                     notify(self, this)
-            except Exception as msg:
-                print(type(msg))
-                print(msg)
+            except Exception as error:
+                msg = '{0}::{1}'.format(type(error), error)
                 messages.error(self.request, msg, extra_tags='danger')
         return context

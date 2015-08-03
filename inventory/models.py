@@ -32,21 +32,6 @@ class Company(UltraModel):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # email_domains = ['', '', '']
 
-    print('move these to the views please, we already have url_* variables')
-    def get_next(self):
-        # Get next by PK from only objects user can see
-        employer = Company.objects.filter(pk=self.user.setting_set.get().employer.pk)
-        customers = Company.objects.filter(customer_of=employer)
-        qs = employer | customers
-        return qs.filter(pk__gt=self.pk)[:1].get()
-
-    def get_prev(self):
-        # Get previous by PK from only objects user can see
-        employer = Company.objects.filter(pk=self.user.setting_set.get().employer.pk)
-        customers = Company.objects.filter(customer_of=employer)
-        qs = employer | customers
-        return qs.filter(pk__lt=self.pk)[:1].get()
-
     def save(self, *args, **kwargs):
         """ Handle default child objects on Company create.
 

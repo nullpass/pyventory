@@ -6,9 +6,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
+
 from pyventory.models import UltraModel
 
-from inventory.models import Company
+from inventory.models import Company, Domain, Application
 
 
 class Department(UltraModel):
@@ -33,8 +34,8 @@ class Department(UltraModel):
         """ Enforce company scope """
         if self.parent is not None:
             if self.parent.company != self.company:
-                msg = 'Cannot assign parent department outside current company "{0}".'
-                raise IntegrityError(msg.format(self.company))
+                error = 'Cannot assign parent department outside current company "{0}".'
+                raise IntegrityError(error.format(self.company))
         return super().save(*args, **kwargs)
 
 
@@ -47,6 +48,28 @@ class Setting(UltraModel):
 
     @property
     def employer(self):
+        """ Return the inventory\Company to which the user's assigned department belongs. """
         if self.department:
             return self.department.company
+        return None
+
+    @property
+    def companies(self):
+        """ Return a QuerySet of inventory\Company(s) this user can see based on user's department. """
+        if self.employer:
+            return Company.objects.filter(models.Q(pk=self.employer.pk) | models.Q(customer_of=self.employer)).order_by('pk').all()
+        return None
+
+    @property
+    def domains(self):
+        """ Return a QuerySet of inventory\Domain(s) this user can see based on user's department. """
+        if self.companies:
+            return Domain.objects.filter(company=self.companies)
+        return None
+
+    @property
+    def applications(self):
+        """ Return a QuerySet of inventory\Application(s) this user can see based on user's department. """
+        if self.companies:
+            return Application.objects.filter(company=self.companies)
         return None

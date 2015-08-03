@@ -14,8 +14,8 @@
             <table class="table table-responsive">
                 <tr>
                     <th class="text-left" width="25%">
-                        {% if object.get_prev %}
-                            <a href="{{ object.get_prev.get_absolute_url }}">previous</a>
+                        {% if get_prev.exists %}
+                            <a href="{{ get_prev.get.get_absolute_url }}">previous</a>
                         {% endif %}
                     <th class="text-right" width="25%">
                         <a href="{% url url_cancel %}">index </a>
@@ -23,8 +23,8 @@
                     <th class="text-left" width="25%">
                         <a href="{% url url_edit pk=object.id %}"> edit</a>
                     <th class="text-right" width="25%">
-                        {% if object.get_next %}
-                            <a href="{{ object.get_next.get_absolute_url }}">next</a>
+                        {% if get_next.exists %}
+                            <a href="{{ get_next.get.get_absolute_url }}">next</a>
                         {% endif %}
                     </th>
                 </tr>
@@ -92,9 +92,13 @@
                         </ul>
                     </td>
                 </tr>
-                {% if object.company_set.all %}
+                {% if object.company_set.count %}
                     <tr>
-                        <th class="col-md-6 text-right">Customer Companies:</th>
+                        <th class="col-md-6 text-right">
+                            Customer Companies
+                            <span class="badge">{{ object.company_set.count }}</span>
+                            <p class="small"><a href="{# url 'inventory:company:related' pk=object.pk, related=company #}">view all</a></p>
+                        </th>
                         <td class="col-md-6 text-left">
                             <ul>
                                 {% for this in object.company_set.all %}
@@ -104,19 +108,41 @@
                         </td>
                     </tr>
                 {% endif %}
-                {% if object.domain_set.all %}
+                {% if object.domain_set.count %}
                     <tr>
-                        <th class="col-md-6 text-right">Domains:</th>
+                        <th class="col-md-6 text-right">
+                            <a href="{# url 'inventory:company:related' pk=object.pk, related=domain #}">Domains</a>
+                            <span class="badge">{{ object.domain_set.count }}</span>
+                        </th>
                         <td class="col-md-6 text-left">
                             <ul>
-                                {% for this in object.domain_set.all %}
+                                {% for this in object.domain_set.all|slice:":10" %}
                                     <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
                                 {% endfor %}
                             </ul>
                         </td>
                     </tr>
                 {% endif %}
-
+                {% if object.application_set.exists %}
+                    <tr>
+                        <th class="col-md-6 text-right">
+                            Applications
+                            <span class="badge">{{ object.application_set.count }}</span>
+                        </th>
+                        <td class="col-md-6 text-left">
+                            <ul>
+                                {% for this in object.application_set.all|slice:":10" %}
+                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            {% if object.application_set.count > 0 %}
+                                <p class="text-right">
+                                    <a href="{# url 'inventory:company:related' pk=object.pk, related=application #}">(view all)</a>
+                                </p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             </table>
         </div>
     </div>

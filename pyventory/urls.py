@@ -22,4 +22,5 @@ urlpatterns = \
              url(r'^install/', views.Install.as_view(), name='shazzam'),
              url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
              url(LOCAL_ADMIN_URL, include(admin.site.urls)),
+             # url('', include('social.apps.django_app.urls', namespace='social'))
              )
