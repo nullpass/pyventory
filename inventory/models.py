@@ -14,9 +14,8 @@ from pyventory.models import UltraModel
 
 
 class Company(UltraModel):
-    """
-    Your company and your client(s)
-    """
+    """ Your company and your client(s) """
+
     name = models.CharField(max_length=256, unique=True)
     STATUS_CHOICES = (
         ('10', 'pre-contract'),
@@ -134,8 +133,9 @@ class Application(UltraModel):
 
 
 class Server(UltraModel):
-    """
-    Physical, virtual, blade, imaginary; whatever form, server.
+    """ Physical, virtual, blade, imaginary; whatever form, server.
+
+    Department: who gets notified of an outage or change.
     """
     name = models.CharField(
         validators=[RegexValidator('^[a-zA-Z0-9\.\-\_]+$')],
@@ -165,6 +165,9 @@ class Server(UltraModel):
                                      help_text='Allow tickets to automatically link to this object when referenced.',
                                      )
     applications = models.ManyToManyField(Application)
+    #
+    # circular import
+    # department = models.ForeignKey('Department', null=True, on_delete=models.SET_NULL)
 
     class Meta:
         unique_together = (("name", "domain"),)

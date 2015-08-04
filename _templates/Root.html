@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{% static 'ico/favicon.ico' %}?201504">
-        <title>{% block pagetitle %} {% endblock pagetitle %}</title>
+        <title>{{ page_title }}</title>
         
         <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -34,10 +34,14 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block HomeView %}{% endblock %}">
-                            {% if user.setting_set.get.employer %}
-                                <a class="navbar-brand" href="{% url 'home' %}">{{ user.setting_set.get.employer }}</a>
+                            {% if user.is_authenticated %}
+                                {% if user.setting_set.get.employer %}
+                                    <a class="navbar-brand" href="{% url 'home' %}">{{ user.setting_set.get.employer }}</a>
+                                {% else %}
+                                    <a class="navbar-brand" href="{% url 'inventory:company:create' %}">[no company set]</a>
+                                {% endif %}
                             {% else %}
-                                <a class="navbar-brand" href="{% url 'inventory:company:create' %}">[no company set]</a>
+                                <a href="{% url 'human:login' %}">Please Log In</a>
                             {% endif %}
                         </li>
                         <li class="dropdown{% block InventoryView %}{% endblock %}">

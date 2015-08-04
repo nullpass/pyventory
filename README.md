@@ -4,10 +4,9 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 
 ### Next:
-* Install: Associate all objects to the demo account.
 * Human: Department views
 * Auth: (no 3pa yet) auth schemes and cascading ownership
-* Inventory: Start updating querysets to restrict company scope
+* Inventory: Keep updating querysets to restrict company scope
 * Tickets: put undo url in success message from unlink_related()
 * Tickets: add link-related form/view to accommodate linking tickets together since we cannot autolink tickets now.
 * Tickets: Changing the domain of a ticket should be its own view.  
@@ -27,3 +26,4 @@ Applications for a company only show the first 10, but make the "Application" ro
 * Current server.make_parent is so dumb, like really. Final version will rely on what users expect to see (if anything)
  when it fails.
 * Will upgrade to Dj 1.8 once python-social-auth is updated.
+* How should we order related objects, (+|-)(pk|modified)?

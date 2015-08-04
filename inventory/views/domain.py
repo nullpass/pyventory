@@ -11,12 +11,15 @@ def queryset_override(view):
     return view.request.user.setting_set.get().domains
 
 
-class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
+class Create(LoginRequiredMixin, generic.CreateView):
     form_class, model = forms.Domain, models.Domain
     template_name = 'inventory/form.html'
-    static_context = {
-        'url_cancel': 'inventory:domain:list',
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['url_cancel'] = 'inventory:domain:list'
+        context['page_title'] = 'Create domain'
+        return context
 
     def get_form(self, form_class):
         form = super().get_form(form_class)
@@ -28,20 +31,21 @@ class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
         return super().form_valid(form)
 
 
-class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
+class Detail(LoginRequiredMixin, generic.DetailView):
     form_class, model = forms.Domain, models.Domain
     template_name = 'inventory/detail.html'
-    static_context = {
-        'model': model,
-        'url_cancel': 'inventory:domain:list',
-        'url_edit': 'inventory:domain:update'
-    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         companies = self.request.user.setting_set.get().companies
         query = models.Domain.objects.filter(company=companies)
         context['get_prev'], context['get_next'] = self.object.prev_and_next(query)
+        context['url_cancel'] = 'inventory:domain:list'
+        context['url_edit'] = 'inventory:domain:update'
+        context['page_title'] = 'Domain: {0}'.format(self.object.name)
+        context['recent'] = {
+            'tickets': self.object.ticket_set.order_by('-modified')[:3].all()
+        }
         return context
 
     def get_queryset(self):
@@ -65,6 +69,11 @@ class List(LoginRequiredMixin, StaticContextMixin, generic.ListView):
 class Update(LoginRequiredMixin, generic.UpdateView):
     form_class, model = forms.Domain, models.Domain
     template_name = 'inventory/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Domain: {0}'.format(self.object.name)
+        return context
 
     def get_queryset(self):
         return queryset_override(self)

@@ -2,8 +2,6 @@
 
 {% block InventoryView %} active {% endblock %}
 
-{% block pagetitle %}{{ model.name_of_class }}: {{ object }}{% endblock pagetitle %}
-
 {% block content %}
 <div class="col-md-6">
     <div class="panel panel-default">
@@ -74,11 +72,12 @@
                         </td>
                     </tr>
                 {% endif %}
+                {% if recent.tickets %}{# not valid for company at this time #}
                 <tr>
-                    <th class="col-md-6 text-right">Recent tickets for this {{ model.name_of_class|lower }}:</th>
+                    <th class="col-md-6 text-right">Recent tickets:</th>
                     <td class="col-md-6 text-left">
                         <ul>
-                            {% for this in object.recent_tickets %}
+                            {% for this in recent.tickets %}
                                 <li>
                                     <a href="{{ this.get_absolute_url }}">
                                         #{{ this.id }}
@@ -92,54 +91,57 @@
                         </ul>
                     </td>
                 </tr>
-                {% if object.company_set.count %}
+                {% endif %}
+                {% if object.company_set.exists %}
                     <tr>
                         <th class="col-md-6 text-right">
-                            Customer Companies
+                            <a href="{# url 'inventory:company:related' pk=object.pk, related=company #}">
+                                Customer Companies
+                            </a>
                             <span class="badge">{{ object.company_set.count }}</span>
-                            <p class="small"><a href="{# url 'inventory:company:related' pk=object.pk, related=company #}">view all</a></p>
                         </th>
                         <td class="col-md-6 text-left">
-                            <ul>
-                                {% for this in object.company_set.all %}
+                            <ul style="list-style:none">
+                                {% for this in object.company_set.all|slice:"5" %}
                                     <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
                                 {% endfor %}
+                                {% if object.company_set.count > 5 %}<li>...</li>{% endif %}
                             </ul>
                         </td>
                     </tr>
                 {% endif %}
-                {% if object.domain_set.count %}
+                {% if object.domain_set.exists %}
                     <tr>
                         <th class="col-md-6 text-right">
                             <a href="{# url 'inventory:company:related' pk=object.pk, related=domain #}">Domains</a>
                             <span class="badge">{{ object.domain_set.count }}</span>
                         </th>
                         <td class="col-md-6 text-left">
-                            <ul>
-                                {% for this in object.domain_set.all|slice:":10" %}
+                            <ul style="list-style:none">
+                                {% for this in object.domain_set.all|slice:":5" %}
                                     <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
                                 {% endfor %}
+                                {% if object.domain_set.count > 5 %}<li>...</li>{% endif %}
                             </ul>
+
                         </td>
                     </tr>
                 {% endif %}
                 {% if object.application_set.exists %}
                     <tr>
                         <th class="col-md-6 text-right">
-                            Applications
+                            <a href="{# url 'inventory:company:related' pk=object.pk, related=application #}">
+                                Applications
+                            </a>
                             <span class="badge">{{ object.application_set.count }}</span>
                         </th>
                         <td class="col-md-6 text-left">
-                            <ul>
-                                {% for this in object.application_set.all|slice:":10" %}
+                            <ul style="list-style:none">
+                                {% for this in object.application_set.all|slice:":5" %}
                                     <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
                                 {% endfor %}
+                                {% if object.application_set.count > 5 %}<li>...</li>{% endif %}
                             </ul>
-                            {% if object.application_set.count > 0 %}
-                                <p class="text-right">
-                                    <a href="{# url 'inventory:company:related' pk=object.pk, related=application #}">(view all)</a>
-                                </p>
-                            {% endif %}
                         </td>
                     </tr>
                 {% endif %}

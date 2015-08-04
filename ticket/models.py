@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
 from inventory.models import Server, Domain, Application
+from human.models import Department
 
 
 def link_related(ticket, body):
@@ -34,6 +35,7 @@ class Ticket(UltraModel):
     """
     Name is the title of the ticket.
     Comments are a different object.
+    User: who owns the ticket and is allowed to modify it. (anyone who can see the ticket can comment on it though)
 
     Domain determines the environment and company that the ticket is for.
 
@@ -44,6 +46,7 @@ class Ticket(UltraModel):
         if a ticket needs manager approval. There will be functions to specify which comment(s) are
         related to the cctrl request.
 
+    Department: aka: The Queue. Determines who can see/own the ticket.
     """
     name = models.CharField(max_length=256)
     body = models.TextField()
@@ -72,6 +75,7 @@ class Ticket(UltraModel):
     #   already fully described in this ticket. Instead, ask for approval in the ticket itself when needed.
     needs_approval = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
+    department = models.ForeignKey(Department, null=True, on_delete=models.SET_NULL)
 
     def get_absolute_url(self):
         return reverse('ticket:detail', kwargs={'pk': self.id})
