@@ -1,9 +1,11 @@
+"""Base functions."""
 from django.db import IntegrityError
 from django.template.defaultfilters import slugify
 
 
 def UltraSlug(string, model):
-    """
+    """Custom slugify-er.
+
     This is another point that Django lets me down.
     Why make a slugify function if there's no built-
     in way to make it unique? That'd be like providing

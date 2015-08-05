@@ -1,7 +1,4 @@
-"""
-    human/views.py
-
-"""
+"""Human views."""
 from django.views import generic
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -15,7 +12,7 @@ from . import models
 
 
 class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
-    """ log in page, require no user logged in """
+    """The log in page, require no user logged in."""
     form_class, model = AuthenticationForm, User
     template_name = 'human/login.html'
     success_url = reverse_lazy('home')
@@ -39,7 +36,7 @@ class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
 
 
 class Logout(generic.RedirectView):
-    """ Blindly log out any request that hits this url with a GET """
+    """Blindly log out any request that hits this url with a GET."""
     url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
@@ -49,4 +46,5 @@ class Logout(generic.RedirectView):
 
 
 class Profile(generic.RedirectView):
+    """A placeholder."""
     url = reverse_lazy('home')

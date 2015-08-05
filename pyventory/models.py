@@ -1,12 +1,12 @@
-# BASE/models.py
+"""Base models."""
 
 from django.db import models
 
 
 class UltraModel(models.Model):
-    """
-    A wrapper model. All models should inherit this. 
-    """
+
+    """A wrapper model. All models should inherit this."""
+
     created = models.DateTimeField(auto_now_add=True)   # Born
     modified = models.DateTimeField(auto_now=True)      # last changed
     #
@@ -26,17 +26,20 @@ class UltraModel(models.Model):
         abstract = True
 
     def __str__(self):
+        """Return name as string."""
         return str(self.name)
 
     @property
     def name_of_class(self):
+        """Expose name of class."""
         return self.__class__.__name__
 
     def prev_and_next(self, queryset):
-        """
-        For a given queryset return a tuple containing the previous and next
-            objects relative to `self` ordered by primary key
+        """Custom `get_(next|previous)_by_foo` method.
 
-            return (PREV, NEXT)
+        For a given queryset return a tuple containing the previous and next objects relative to `self`
+        ordered by primary key.
+
+        return (PREV, NEXT)
         """
         return (queryset.order_by('-pk').filter(pk__lt=self.pk)[:1], queryset.filter(pk__gt=self.pk)[:1])

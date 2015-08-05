@@ -1,3 +1,3 @@
-from django.test import TestCase
+"""Ticket tests."""
 
-# Create your tests here.
+from django.test import TestCase

@@ -1,4 +1,4 @@
-# BASE\settings.py
+"""Base settings."""
 import os
 from cfgpyventory import *
 

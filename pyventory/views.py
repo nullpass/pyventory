@@ -1,7 +1,4 @@
-"""
-    BASE/views.py
-    
-"""
+"""Base views."""
 import time
 
 from django.db.utils import OperationalError
@@ -27,7 +24,7 @@ Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to
 
 
 def notify(self, this):
-    """ Show success message """
+    """Show success message."""
     msg = '{0} - Added: {1}'.format(
         # time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
         time.strftime('%c', time.gmtime()),
@@ -37,13 +34,13 @@ def notify(self, this):
 
 
 def inject(obj, **kwargs):
-    """ Force insert of arbitrary data """
+    """Force insert of arbitrary data."""
     obj(**kwargs).save()
     return
 
 
 def truncate(this):
-    """ Enable/disable of deleting all objects before adding default data. """
+    """Enable/disable of deleting all objects before adding default data."""
     try:
         this.objects.all().delete()
     except OperationalError as error:
@@ -56,13 +53,16 @@ def truncate(this):
 
 
 class Install(SuperuserRequiredMixin, generic.TemplateView):
-    """ Inject usable default data
+
+    """Inject usable default data.
 
     This is also a reasonable way to test things while we're still in alpha
     """
+
     template_name = 'install.html'
 
     def get_context_data(self, **kwargs):
+        """Run installer during render."""
         context = super().get_context_data()
         context['page_title'] = 'Install Wizard!'
         if self.request.GET.get('install') == 'yes' and self.request.GET.get('magic') == 'please':

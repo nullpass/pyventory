@@ -1,10 +1,10 @@
+"""Ticket models."""
 import re
 import datetime
 
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
@@ -13,9 +13,9 @@ from human.models import Department
 
 
 def link_related(ticket, body):
-    """
-    Find and automatically link servers if object names are mentioned in {body}
-    Will only link objects in same ticket.domain
+    """Find and automatically link servers if object names are mentioned in {body}.
+
+    Will only link objects in same ticket.domain.
     """
     separator = '[,:\. <>\[\];\r\n]+'
     body = body[:16384]  # Limit haystack size (sometimes users paste huge logs to ticket)
@@ -32,22 +32,24 @@ def link_related(ticket, body):
 
 
 class Ticket(UltraModel):
-    """
+
+    """A complaint, change request or notice of outage.
+
     Attributes:
         name: The title of the ticket, generated automatically from self.body.
         body: The 'original complaint'.
-        user: Who owns the ticket and is allowed to modify it. (anyone who can see the ticket can comment on it though)
+        user: Who owns the ticket and is allowed to modify it (anyone who can see the ticket can comment on it though).
         domain: Determines the environment and company that the ticket is for.
         can_link_related: Whether the body of the Ticket should be automatically parsed for inventory objects.
         servers: inventory.Server objects that this Ticket references. Automatically updated.
         related_tickets: Other Tickets related to this object.
         applications: inventory.Application objects that this Ticket references. Automatically updated.
-        approvals: Replaces the old cctrl (change management) application. Auth'ed humans can now specify
-            if a ticket needs manager approval. There will be functions to specify which comment(s) are
-            related to the cctrl request.
+        needs_approval: Change-Control hook, bool, does work in this Ticket need approval before it starts?
+        is_approved: Wether the requested changes is/are allowed to be done.
         department: Determines who can see/own the ticket. Also used as a person's ticket queue.
 
     """
+
     name = models.CharField(max_length=256)
     body = models.TextField()
     domain = models.ForeignKey(Domain, null=True, on_delete=models.SET_NULL)
@@ -64,13 +66,10 @@ class Ticket(UltraModel):
         choices=STATUS_CHOICES,
         default=STATUS_CHOICES[0][0]
     )
-    #
     can_link_related = models.BooleanField(default=True)
-    # These usually get automatically updated based on contents of comments.
     servers = models.ManyToManyField(Server, null=True, blank=True)
     related_tickets = models.ManyToManyField('Ticket', null=True, blank=True)
     applications = models.ManyToManyField(Application, null=True, blank=True)
-    #
     # Hey guys, don't open _yet_another_ ticket in a completely different system just to get approval for work that is
     #   already fully described in this ticket. Instead, ask for approval in the ticket itself when needed.
     needs_approval = models.BooleanField(default=False)
@@ -78,25 +77,26 @@ class Ticket(UltraModel):
     department = models.ForeignKey(Department, null=True, on_delete=models.SET_NULL)
 
     def get_absolute_url(self):
+        """Detail View of object."""
         return reverse('ticket:detail', kwargs={'pk': self.id})
 
     def __str__(self):
-        """
-        ENV-ID is the 'ticket number' humans talk about.
-        """
+        """ENV-ID is the 'ticket number' humans talk about."""
         return '{0}'.format(self.id)
 
     def save(self, *args, **kwargs):
-        """
-        1. Force status to New on ticket create
+        """Enforce logic during save.
+
+        1. Force status to New on ticket create.
         2. Determine ticket's title from body.
         3. Write obj to db
         4. Find and link any related objects.
         """
+        n = 128
         if not self.pk:
             self.status='10'
-        body = self.body.replace('\r','')[:128]
-        self.name = body.replace('\n', ' ')  # Default to first X characters
+        body = self.body.replace('\r','')[:n]
+        self.name = body.replace('\n', ' ')  # Default to first n characters
         if '\n' in body:
             self.name = '{0}'.format(body.split('\n')[0])  # Use first line if there is a line break.
         super().save(*args, **kwargs)
@@ -104,9 +104,7 @@ class Ticket(UltraModel):
             link_related(self, self.body)
 
     def unlink_related(self, view):
-        """
-        Remove an object association from this ticket.
-        """
+        """Remove an object association from this ticket."""
         this = None
         if view.kwargs.get('server'):
             this = get_object_or_404(Server, id=view.kwargs.get('server'))
@@ -124,6 +122,7 @@ class Ticket(UltraModel):
 
 
 class Comment(UltraModel):
+
     """A comment (or reply) to a ticket.
 
     Attributes:
@@ -133,6 +132,7 @@ class Comment(UltraModel):
         can_link_related: Whether the body of the Comment should be automatically parsed for inventory objects.
 
     """
+
     name = models.TextField(max_length=1024)
     ticket = models.ForeignKey(Ticket, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
@@ -143,7 +143,8 @@ class Comment(UltraModel):
         return reverse('ticket:comment:detail', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
-        """
+        """Post-save actions.
+
         1. Save obj to DB, required if called during a CreateView, obj must exist in DB if we are to link_related()
         2. If allowed, look for references to linkable objects, link if found.
         3. Update the ticket's modified element without invoking ticket.save().

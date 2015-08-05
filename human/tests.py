@@ -1,6 +1,4 @@
-"""
-    Human.Tests.py
-"""
+"""Human testing."""
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -13,10 +11,10 @@ from . import models
 
 class HumanTestCase(TestCase):
 
+    """Test all the things."""
+
     def test_diff_parent_company(self):
-        """
-        Ensure one cannot assign parent department from a different company.
-        """
+        """Ensure one cannot assign parent department from a different company."""
         with self.assertRaises(IntegrityError):
             t1 = models.Department.objects.create(name='t1',
                                                   company=Company.objects.create(name='1st'))
