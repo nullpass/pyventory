@@ -33,20 +33,20 @@ def link_related(ticket, body):
 
 class Ticket(UltraModel):
     """
-    Name is the title of the ticket.
-    Comments are a different object.
-    User: who owns the ticket and is allowed to modify it. (anyone who can see the ticket can comment on it though)
+    Attributes:
+        name: The title of the ticket, generated automatically from self.body.
+        body: The 'original complaint'.
+        user: Who owns the ticket and is allowed to modify it. (anyone who can see the ticket can comment on it though)
+        domain: Determines the environment and company that the ticket is for.
+        can_link_related: Whether the body of the Ticket should be automatically parsed for inventory objects.
+        servers: inventory.Server objects that this Ticket references. Automatically updated.
+        related_tickets: Other Tickets related to this object.
+        applications: inventory.Application objects that this Ticket references. Automatically updated.
+        approvals: Replaces the old cctrl (change management) application. Auth'ed humans can now specify
+            if a ticket needs manager approval. There will be functions to specify which comment(s) are
+            related to the cctrl request.
+        department: Determines who can see/own the ticket. Also used as a person's ticket queue.
 
-    Domain determines the environment and company that the ticket is for.
-
-    Servers and related_tickets are foreign key buckets that allow us to mention other objects and
-        get them dynamically linked.
-
-    Approvals replaces the old cctrl (change management) application. Auth'ed humans can now specify
-        if a ticket needs manager approval. There will be functions to specify which comment(s) are
-        related to the cctrl request.
-
-    Department: aka: The Queue. Determines who can see/own the ticket.
     """
     name = models.CharField(max_length=256)
     body = models.TextField()
@@ -124,8 +124,14 @@ class Ticket(UltraModel):
 
 
 class Comment(UltraModel):
-    """
-    A comment (or reply) to a ticket.
+    """A comment (or reply) to a ticket.
+
+    Attributes:
+        name: The body of the Comment
+        ticket: The Ticket to which this object belongs.
+        user: The author of this object.
+        can_link_related: Whether the body of the Comment should be automatically parsed for inventory objects.
+
     """
     name = models.TextField(max_length=1024)
     ticket = models.ForeignKey(Ticket, null=True, on_delete=models.SET_NULL)
@@ -133,6 +139,7 @@ class Comment(UltraModel):
     can_link_related = models.BooleanField(default=True)
 
     def get_absolute_url(self):
+        """The Detail View URL of object."""
         return reverse('ticket:comment:detail', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
