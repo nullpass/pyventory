@@ -181,7 +181,7 @@ class Server(UltraModel):
         verbose_name='hostname',
         help_text='example: "mail01"',
     )
-    domain = models.ForeignKey(Domain)
+    domain = models.ForeignKey(Domain, blank=False, null=True, on_delete=models.SET_NULL)
     parent = models.ForeignKey('Server', null=True, on_delete=models.SET_NULL)
     CHOICES = (
         ('10', 'Rack-mounted server'),

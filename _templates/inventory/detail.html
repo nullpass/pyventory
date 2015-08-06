@@ -6,7 +6,7 @@
 <div class="col-md-6">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h2 class="text-center">{{ object }}</h2>
+            <h3 class="text-center" __style="white-space:nowrap">{{ object|truncatechars:32 }}</h3>
         </div>
         <div class="panel-body">
             <table class="table table-responsive">
@@ -28,17 +28,31 @@
                 </tr>
             </table>
             <table class="table table-striped table-responsive table-condensed">
-                {% if object.status %}
+                {% if object.name %}
                     <tr>
-                        <th class="col-md-6 text-right">Status:</th>
-                        <td class="col-md-6 text-left">{{ object.get_status_display }}</td>
+                        <th class="col-md-6 text-right">Name:</th>
+                        <td class="col-md-6 text-left">{{ object.name }}</td>
+                    </tr>
+                {% endif %}
+                {% if object.domain %}
+                    <tr>
+                        <th class="col-md-6 text-right">Domain:</th>
+                        <td class="col-md-6 text-left">
+                            <a href="{{ object.domain.get_absolute_url }}">{{ object.domain|truncatechars:32 }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-6 text-right">Company:</th>
+                        <td class="col-md-6 text-left">
+                            <a href="{{ object.domain.company.get_absolute_url }}">{{ object.domain.company|truncatechars:32 }}</a>
+                        </td>
                     </tr>
                 {% endif %}
                 {% if object.company %}
                     <tr>
                         <th class="col-md-6 text-right">Company:</th>
                         <td class="col-md-6 text-left">
-                            <a href="{{ object.company.get_absolute_url }}">{{ object.company }}</a>
+                            <a href="{{ object.company.get_absolute_url }}">{{ object.company|truncatechars:32 }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -46,7 +60,7 @@
                     <tr>
                         <th class="col-md-6 text-right">Customer of:</th>
                         <td class="col-md-6 text-left">
-                            <a href="{{ object.customer_of.get_absolute_url }}">{{ object.customer_of }}</a>
+                            <a href="{{ object.customer_of.get_absolute_url }}">{{ object.customer_of|truncatechars:32 }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -92,59 +106,10 @@
                     </td>
                 </tr>
                 {% endif %}
-                {% if object.company_set.exists %}
-                    <tr>
-                        <th class="col-md-6 text-right">
-                            <a href="{# url 'inventory:company:related' pk=object.pk, related=company #}">
-                                Customer Companies
-                            </a>
-                            <span class="badge">{{ object.company_set.count }}</span>
-                        </th>
-                        <td class="col-md-6 text-left">
-                            <ul style="list-style:none">
-                                {% for this in object.company_set.all|slice:"5" %}
-                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
-                                {% endfor %}
-                                {% if object.company_set.count > 5 %}<li>...</li>{% endif %}
-                            </ul>
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if object.domain_set.exists %}
-                    <tr>
-                        <th class="col-md-6 text-right">
-                            <a href="{# url 'inventory:company:related' pk=object.pk, related=domain #}">Domains</a>
-                            <span class="badge">{{ object.domain_set.count }}</span>
-                        </th>
-                        <td class="col-md-6 text-left">
-                            <ul style="list-style:none">
-                                {% for this in object.domain_set.all|slice:":5" %}
-                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
-                                {% endfor %}
-                                {% if object.domain_set.count > 5 %}<li>...</li>{% endif %}
-                            </ul>
-
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if object.application_set.exists %}
-                    <tr>
-                        <th class="col-md-6 text-right">
-                            <a href="{# url 'inventory:company:related' pk=object.pk, related=application #}">
-                                Applications
-                            </a>
-                            <span class="badge">{{ object.application_set.count }}</span>
-                        </th>
-                        <td class="col-md-6 text-left">
-                            <ul style="list-style:none">
-                                {% for this in object.application_set.all|slice:":5" %}
-                                    <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
-                                {% endfor %}
-                                {% if object.application_set.count > 5 %}<li>...</li>{% endif %}
-                            </ul>
-                        </td>
-                    </tr>
-                {% endif %}
+                {% include "inventory/tr_related.html" with qs=object.company_set title="Customers" %}
+                {% include "inventory/tr_related.html" with qs=object.domain_set title="Domains" %}
+                {% include "inventory/tr_related.html" with qs=object.application_set title="Applications" %}
+                {% include "inventory/tr_related.html" with qs=object.server_set title="Servers" %}
             </table>
         </div>
     </div>

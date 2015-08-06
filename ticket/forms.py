@@ -23,9 +23,9 @@ class Ticket(forms.ModelForm):
         self.fields['domain'].empty_label = ' -choose domain-'
 
 
-class Reply(forms.ModelForm):
+class Comment(forms.ModelForm):
 
-    """Add a comment to a ticket."""
+    """Add a Comment to a Ticket or edit a Comment."""
 
     class Meta:
         fields = (

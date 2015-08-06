@@ -3,6 +3,7 @@
 {% block InventoryView %} active {% endblock %}
 
 {% block content %}
+    <h4>{{ page_title }}</h4>
     <form action="" method="post">{% csrf_token %}
         <ul>
             {{ form.as_ul }}

@@ -24,6 +24,7 @@ class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
             if user.is_active:
                 login(self.request, user)
                 account, created = models.Setting.objects.get_or_create(name=self.request.user)
+                # if created: int_log('new user'.format(account))
                 count = user.company_set.count()
                 messages.success(self.request, 'Welcome back!')
                 if self.request.GET.get('next'):

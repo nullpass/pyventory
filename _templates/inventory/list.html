@@ -2,18 +2,14 @@
 
 {% block InventoryView %} active {% endblock %}
 
-{% block pagetitle %}inventory\list.html{% endblock pagetitle %}
-
 {% block content %}
-<h1>
-    <a class="small" href="{% url 'inventory:index' %}">⬅️</a>
-    {# object_list.first.name_of_class #}
-    {{ model.name_of_class }}s
-    <a href="{% url url_create %}">+</a>{# href=search>?< #}</h1>
-<ol>
-    {% for this in object_list %}
-        <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
-    {% endfor %}
-</ol>
-
+    <h1>
+        <a class="small" href="{% url 'inventory:index' %}">⬅️</a>
+        {{ page_title }}
+        <a href="{% url url_create %}">+</a>{# href=search>?< #}</h1>
+    <ol>
+        {% for this in object_list %}
+            <li><a href="{{ this.get_absolute_url }}">{{ this }}</a></li>
+        {% endfor %}
+    </ol>
 {% endblock %}

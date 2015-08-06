@@ -7,19 +7,17 @@ from inventory import forms
 from inventory import models
 
 
-class Create(LoginRequiredMixin, generic.CreateView):
+class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
 
     """Add a new Application to inventory."""
 
     form_class, model = forms.Application, models.Application
     template_name = 'inventory/form.html'
-
-    def get_context_data(self, **kwargs):
-        """Provide custom render data to template."""
-        context = super().get_context_data(**kwargs)
-        context['url_cancel'] = 'inventory:application:list'
-        context['page_title'] = 'Add application'
-        return context
+    static_context = {
+        'url_cancel': 'inventory:application:list',
+        'url_edit': 'inventory:application:update',
+        'page_title': 'Add application',
+    }
 
     def get_form(self, form_class):
         """Limit fields to visible objects."""
@@ -33,25 +31,27 @@ class Create(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
-class Detail(LoginRequiredMixin, generic.DetailView):
+class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
 
     """View an Application."""
 
     form_class, model = forms.Application, models.Application
     template_name = 'inventory/detail.html'
+    static_context = {
+        'url_cancel': 'inventory:application:list',
+        'url_edit': 'inventory:application:update',
+        'page_title': 'Application:',
+    }
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().applications
+        return self.request.user.setting_set.get().applications
 
     def get_context_data(self, **kwargs):
         """Provide custom render data to template."""
         context = super().get_context_data(**kwargs)
         query = self.request.user.setting_set.get().applications
         context['get_prev'], context['get_next'] = self.object.prev_and_next(query)
-        context['url_cancel'] = 'inventory:application:list'
-        context['url_edit'] = 'inventory:application:update'
-        context['page_title'] = 'App: {0}'.format(self.object.name)
         context['recent'] = {
             'tickets': self.object.ticket_set.order_by('-modified')[:3].all()
         }
@@ -65,27 +65,24 @@ class List(LoginRequiredMixin, StaticContextMixin, generic.ListView):
     form_class, model = forms.Application, models.Application
     template_name = 'inventory/list.html'
     static_context = {
-        'model': model,
+        'page_title': 'Applications',
         'url_create': 'inventory:application:create',
     }
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().applications
+        return self.request.user.setting_set.get().applications
 
 
-class Update(LoginRequiredMixin, generic.UpdateView):
+class Update(LoginRequiredMixin, StaticContextMixin, generic.UpdateView):
 
     """Edit an Application."""
 
     form_class, model = forms.Application, models.Application
     template_name = 'inventory/form.html'
-
-    def get_context_data(self, **kwargs):
-        """Provide custom render data to template."""
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = 'App: {0}'.format(self.object.name)
-        return context
+    static_context = {
+        'page_title': 'Edit application:',
+    }
 
     def get_form(self, form_class):
         """Limit fields to visible objects."""
@@ -95,7 +92,7 @@ class Update(LoginRequiredMixin, generic.UpdateView):
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().applications
+        return self.request.user.setting_set.get().applications
 
     def form_valid(self, form):
         """Inform user."""

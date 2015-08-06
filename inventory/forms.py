@@ -1,8 +1,11 @@
+"""Inventory forms."""
 from django import forms
 from . import models
 
 
 class Company(forms.ModelForm):
+
+    """Company form."""
 
     class Meta:
         fields = (
@@ -16,6 +19,8 @@ class Company(forms.ModelForm):
 
 class Application(forms.ModelForm):
 
+    """Application form."""
+
     class Meta:
         fields = (
             'name',
@@ -26,8 +31,16 @@ class Application(forms.ModelForm):
         )
         model = models.Application
 
+    def __init__(self, *args, **kwargs):
+        """HTML customizations for form."""
+        super().__init__(*args, **kwargs)
+        self.fields['company'].empty_label = None
+
 
 class Server(forms.ModelForm):
+
+    """Server form."""
+
     is_in = forms.CharField(max_length=64, required=False)
 
     class Meta:
@@ -41,8 +54,15 @@ class Server(forms.ModelForm):
         )
         model = models.Server
 
+    def __init__(self, *args, **kwargs):
+        """HTML customizations for form."""
+        super().__init__(*args, **kwargs)
+        self.fields['domain'].empty_label = None
+
 
 class Domain(forms.ModelForm):
+
+    """Domain form."""
 
     class Meta:
         fields = (
@@ -52,3 +72,8 @@ class Domain(forms.ModelForm):
             'doc_url',
         )
         model = models.Domain
+
+    def __init__(self, *args, **kwargs):
+        """HTML customizations for form."""
+        super().__init__(*args, **kwargs)
+        self.fields['company'].empty_label = None

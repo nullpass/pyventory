@@ -1,0 +1,23 @@
+
+{% if qs.exists %}
+    <tr>
+        <th class="col-md-6 text-right">
+            <a href="{# url 'inventory:company:related' pk=object.pk, related=related_title|lower #}">
+                {{ title }}
+            </a>
+            <span class="badge">{{ qs.count }}</span>
+        </th>
+        <td class="col-md-6 text-left">
+            <ul style="list-style:none">
+                {% for this in qs.all|slice:":5" %}
+                    <li>
+                        <a href="{{ this.get_absolute_url }}">
+                            {{ this.name|truncatechars:32 }}
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if qs.count > 5 %}<li>...</li>{% endif %}
+            </ul>
+        </td>
+    </tr>
+{% endif %}

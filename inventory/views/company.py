@@ -7,11 +7,6 @@ from inventory import forms
 from inventory import models
 
 
-def queryset_override(view):
-    """Show only objects linked to user's base company and customers of."""
-    return view.request.user.setting_set.get().companies
-
-
 class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
 
     """Add a new Company to inventory."""
@@ -20,6 +15,7 @@ class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
     template_name = 'inventory/form.html'
     static_context = {
         'url_cancel': 'inventory:company:list',
+        'page_title': 'Add a company:',
     }
 
     def form_valid(self, form):
@@ -38,9 +34,9 @@ class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
     form_class, model = forms.Company, models.Company
     template_name = 'inventory/detail.html'
     static_context = {
-        'model': model,
         'url_cancel': 'inventory:company:list',
         'url_edit': 'inventory:company:update',
+        'page_title': 'Company:',
     }
 
     def get_context_data(self, **kwargs):
@@ -52,7 +48,7 @@ class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().companies
+        return self.request.user.setting_set.get().companies
 
 
 class List(LoginRequiredMixin, StaticContextMixin, generic.ListView):
@@ -62,25 +58,28 @@ class List(LoginRequiredMixin, StaticContextMixin, generic.ListView):
     form_class, model = forms.Company, models.Company
     template_name = 'inventory/list.html'
     static_context = {
-        'model': model,
         'url_create': 'inventory:company:create',
+        'page_title': 'Companies',
     }
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().companies
+        return self.request.user.setting_set.get().companies
 
 
-class Update(LoginRequiredMixin, generic.UpdateView):
+class Update(LoginRequiredMixin, StaticContextMixin, generic.UpdateView):
 
     """Edit a Company."""
 
     form_class, model = forms.Company, models.Company
     template_name = 'inventory/form.html'
+    static_context = {
+        'page_title': 'Edit company:',
+    }
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
-        return view.request.user.setting_set.get().companies
+        return self.request.user.setting_set.get().companies
 
     def form_valid(self, form):
         """Inform user."""

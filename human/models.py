@@ -6,15 +6,12 @@ from django.db.utils import IntegrityError
 
 from pyventory.models import UltraModel
 
-from inventory.models import Company, Domain, Application
+from inventory.models import Company, Domain, Application, Server
 
 
 class Department(UltraModel):
 
-    """A group object with reverse keys to Users that is the foundation for determining object and view access scope.
-
-    Do not move this to inventory, a Department is only ever a group of people and therefor belongs in the human app.
-    """
+    """A group object with reverse keys to Users and is the foundation for determining object and view access scope."""
 
     name = models.CharField(max_length=256)
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
@@ -74,4 +71,11 @@ class Setting(UltraModel):
         """Return a QuerySet of Application(s) this user can see based on user's department."""
         if self.companies:
             return Application.objects.filter(company=self.companies)
+        return None
+
+    @property
+    def servers(self):
+        """Return a QuerySet of Server(s) this user can see based on user's department."""
+        if self.companies:
+            return Server.objects.filter(domain=self.domains)
         return None
