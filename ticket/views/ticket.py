@@ -7,6 +7,7 @@ from braces.views import LoginRequiredMixin
 from ticket import models
 from ticket import forms
 
+
 class Index(LoginRequiredMixin, generic.ListView):
 
     """The default view for /tickets/.
@@ -20,7 +21,8 @@ class Index(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Limit Ticket list to latest n object(s)."""
         n = 16
-        return models.Ticket.objects.all().order_by('modified')[:n]
+        domains = self.request.user.setting_set.get().domains
+        return models.Ticket.objects.filter(domain=domains).order_by('modified')[:n]
 
 
 class Update(LoginRequiredMixin, generic.UpdateView):
@@ -29,6 +31,11 @@ class Update(LoginRequiredMixin, generic.UpdateView):
 
     form_class, model = forms.Ticket, models.Ticket
     template_name = 'ticket/form.html'
+
+    def get_queryset(self):
+        """Show only objects linked to user's base company and customers of."""
+        domains = self.request.user.setting_set.get().domains
+        return models.Ticket.objects.filter(domain=domains).all()
 
 
 class Create(LoginRequiredMixin, generic.CreateView):
@@ -51,6 +58,11 @@ class Detail(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['form_reply'] = forms.Comment
         return context
+
+    def get_queryset(self):
+        """Show only objects linked to user's base company and customers of."""
+        domains = self.request.user.setting_set.get().domains
+        return models.Ticket.objects.filter(domain=domains).all()
 
 
 class Unlink(LoginRequiredMixin, generic.DetailView):
@@ -87,3 +99,8 @@ class Seize(LoginRequiredMixin, generic.DetailView):
             self.object.status = '20'
         self.object.save()
         return redirect(self.object.get_absolute_url())
+
+    def get_queryset(self):
+        """Show only objects linked to user's base company and customers of."""
+        domains = self.request.user.setting_set.get().domains
+        return models.Ticket.objects.filter(domain=domains).all()

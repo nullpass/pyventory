@@ -19,7 +19,6 @@ class Create(LoginRequiredMixin, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.ticket = get_object_or_404(models.Ticket, id=self.kwargs.get('pk'))
         self.object.user = self.request.user
-        self.success_url = self.object.ticket.get_absolute_url()
         self.success_url = '{0}#latest'.format(self.object.ticket.get_absolute_url())
         return super().form_valid(form)
 
@@ -31,10 +30,9 @@ class Update(LoginRequiredMixin, generic.UpdateView):
     form_class, model = forms.Comment, models.Comment
     template_name = 'ticket/form.html'
 
-    def form_valid(self, form):
+    def get_success_url(self):
         """Redirect back to the Ticket."""
-        self.success_url = '{0}#{1}'.format(self.object.ticket.get_absolute_url(), self.object.id)
-        return super().form_valid(form)
+        return '{0}#{1}'.format(self.object.ticket.get_absolute_url(), self.object.id)
 
 
 class Detail(LoginRequiredMixin, generic.DetailView):
