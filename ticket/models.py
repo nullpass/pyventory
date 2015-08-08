@@ -1,7 +1,7 @@
 """Ticket models."""
 import re
-import datetime
 
+from django.utils import timezone
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -154,4 +154,4 @@ class Comment(UltraModel):
         super().save(*args, **kwargs)
         if self.can_link_related:
             link_related(self.ticket, self.name)
-        Ticket.objects.filter(pk=self.ticket.pk).update(modified=datetime.datetime.now())
+        Ticket.objects.filter(pk=self.ticket.pk).update(modified=timezone.now())
