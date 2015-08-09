@@ -2,13 +2,13 @@
 from django.views import generic
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, StaticContextMixin
 
 from ticket import models
 from ticket import forms
 
 
-class Index(LoginRequiredMixin, generic.ListView):
+class Index(LoginRequiredMixin, StaticContextMixin, generic.ListView):
 
     """The default view for /tickets/.
 
@@ -17,6 +17,9 @@ class Index(LoginRequiredMixin, generic.ListView):
 
     form_class, model = forms.Ticket, models.Ticket
     template_name = 'ticket/index.html'
+    static_context = {
+        'page_title': 'Tickets',
+    }
 
     def get_queryset(self):
         """Limit Ticket list to latest n object(s)."""
@@ -38,12 +41,21 @@ class Update(LoginRequiredMixin, generic.UpdateView):
         return models.Ticket.objects.filter(domain=domains).all()
 
 
-class Create(LoginRequiredMixin, generic.CreateView):
+class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
 
     """Create a new ticket."""
 
     form_class, model = forms.Ticket, models.Ticket
     template_name = 'ticket/create.html'
+    static_context = {
+        'page_title': 'Create ticket',
+    }
+
+    def get_form(self, form_class):
+        """Limit fields to visible objects."""
+        form = super().get_form(form_class)
+        form.fields['domain'].queryset = self.request.user.setting_set.get().domains
+        return form
 
 
 class Detail(LoginRequiredMixin, generic.DetailView):
