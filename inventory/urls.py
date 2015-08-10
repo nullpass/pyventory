@@ -1,8 +1,7 @@
-"""
+"""Inventory URLs
 
 namespaces
     inventory:(application|domain|server):(create|detail|index|update)
-
 
 """
 from django.conf.urls import patterns, include, url

@@ -1,12 +1,8 @@
-"""
-    Inventory.Tests.py
-"""
-from django.db.utils import IntegrityError
+"""Inventory.Tests.py"""
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
-
-from inventory.models import Company
+# from django.db.utils import IntegrityError
+# from django.core.urlresolvers import reverse
+# from django.core.exceptions import ValidationError
 
 from . import models
 

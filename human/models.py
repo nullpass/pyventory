@@ -2,10 +2,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-
+from django.core.urlresolvers import reverse
 
 from pyventory.models import UltraModel
-
 from inventory.models import Company, Domain, Application, Server
 
 
@@ -15,11 +14,15 @@ class Department(UltraModel):
 
     name = models.CharField(max_length=256)
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
-    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Parent Dept.')
     email = models.EmailField(blank=True, null=True)
 
     class Meta:
         unique_together = (("name", "company"),)
+
+    def get_absolute_url(self):
+        """The Detail View URL of object."""
+        return reverse('human:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         """Return name as string."""

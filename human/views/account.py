@@ -1,14 +1,13 @@
-"""Human views."""
+"""Human.Account views."""
 from django.views import generic
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-
 from braces.views import AnonymousRequiredMixin, SSLRequiredMixin
 
-from . import models
+from human import models
 
 
 class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):

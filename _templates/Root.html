@@ -47,10 +47,11 @@
                         <li class="dropdown{% block InventoryView %}{% endblock %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Inventory <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url 'inventory:server:list' %}">Servers</a></li>
-                                <li><a href="{% url 'inventory:domain:list' %}">Domains</a></li>
-                                <li><a href="{% url 'inventory:application:list' %}">Applications</a></li>
                                 <li><a href="{% url 'inventory:company:list' %}">Companies</a></li>
+                                <li style="text-indent:8px;"><a href="{% url 'human:list' %}">Departments</a></li>
+                                <li style="text-indent:8px;"><a href="{% url 'inventory:domain:list' %}">Domains</a></li>
+                                <li style="text-indent:16px;"><a href="{% url 'inventory:application:list' %}">Applications</a></li>
+                                <li style="text-indent:16px;"><a href="{% url 'inventory:server:list' %}">Servers</a></li>
                             </ul>
                         </li>
                         <li class="dropdown{% block TicketsView %}{% endblock %}">
