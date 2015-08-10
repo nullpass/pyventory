@@ -1,19 +1,7 @@
-"""Human.Department views.
-
-
-
-This is an in-place word-swap import, Please "do the needful" and convert the logic to match Departments.
-
-
-
-
-
-"""
+"""Human.Department views."""
 from django.views import generic
 from django.contrib import messages
 from braces.views import LoginRequiredMixin, StaticContextMixin
-
-from inventory.models import Company
 
 from human import models
 from human import forms
