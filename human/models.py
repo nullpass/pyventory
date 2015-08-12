@@ -1,42 +1,9 @@
 """Human models."""
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.utils import IntegrityError
-from django.core.urlresolvers import reverse
 
 from pyventory.models import UltraModel
 from inventory.models import Company, Domain, Application, Server
-
-
-class Department(UltraModel):
-
-    """A group object with reverse keys to Users and is the foundation for determining object and view access scope."""
-
-    name = models.CharField(max_length=256)
-    company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
-    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Parent Dept.')
-    email = models.EmailField(blank=True, null=True)
-
-    class Meta:
-        unique_together = (("name", "company"),)
-
-    def get_absolute_url(self):
-        """The Detail View URL of object."""
-        return reverse('human:detail', kwargs={'pk': self.pk})
-
-    def __str__(self):
-        """Return name as string."""
-        string = '{0}\{1}'.format(self.company, self.name)
-        # string = '{0} @ {1}'.format(self.name, self.company)
-        return string
-
-    def save(self, *args, **kwargs):
-        """Enforce company scope."""
-        if self.parent is not None:
-            if self.parent.company != self.company:
-                error = 'Cannot assign parent department outside current company "{0}".'
-                raise IntegrityError(error.format(self.company))
-        return super().save(*args, **kwargs)
 
 
 class Setting(UltraModel):
@@ -44,7 +11,7 @@ class Setting(UltraModel):
     """A lazy extension of the user class."""
 
     name = models.ForeignKey(User)
-    department = models.ForeignKey(Department, null=True, on_delete=models.SET_NULL)
+    department = models.ForeignKey('inventory.Department', null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=256, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
 

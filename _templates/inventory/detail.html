@@ -16,10 +16,10 @@
                             <a href="{{ get_prev.get.get_absolute_url }}">previous</a>
                         {% endif %}
                     <th class="text-right" width="25%">
-                        <a href="{% url url_cancel %}">index </a>
+                        <a href="{{ href_cancel }}">index </a>
                     </th>
                     <th class="text-left" width="25%">
-                        <a href="{% url url_edit pk=object.id %}"> edit</a>
+                        <a href="{{ href_edit }}"> edit</a>
                     <th class="text-right" width="25%">
                         {% if get_next.exists %}
                             <a href="{{ get_next.get.get_absolute_url }}">next</a>

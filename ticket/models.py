@@ -8,8 +8,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from pyventory.models import UltraModel
-from inventory.models import Server, Domain, Application
-from human.models import Department
+from inventory.models import Server, Domain, Application, Department
 
 
 def link_related(ticket, body):

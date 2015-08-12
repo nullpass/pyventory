@@ -4,8 +4,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 
 ### Next:
-* Human: Department views
-* Move Depts to Inventory (sorry)
 * Auth: (no 3pa yet) auth schemes and cascading ownership
 * Inventory: Keep updating QuerySets to restrict company scope
 * Tickets: put undo url in success message from unlink_related()
