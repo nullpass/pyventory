@@ -2,7 +2,7 @@
 {% if qs.exists %}
     <tr>
         <th class="col-md-6 text-right">
-            <a href="{# url 'inventory:company:related' pk=object.pk, related=related_title|lower #}">
+            <a href="{% url 'inventory:company:related' pk=object.pk needle=title %}">
                 {{ title }}
             </a>
             <span class="badge">{{ qs.count }}</span>

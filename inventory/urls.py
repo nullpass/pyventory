@@ -40,6 +40,7 @@ company_patterns = \
              url(r'^(?P<pk>\d+)/$',        company.Detail.as_view(), name='detail'),
              url(r'^$',                    company.List.as_view(),   name='list'),
              url(r'^update/(?P<pk>\d+)/$', company.Update.as_view(), name='update'),
+             url(r'^(?P<pk>\d+)/related/(?P<needle>\w+)/$', company.Related.as_view(), name='related'),
              )
 
 depart_patterns = \

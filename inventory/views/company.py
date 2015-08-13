@@ -1,5 +1,6 @@
 """Company views."""
 from django.views import generic
+from django.http import Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin, StaticContextMixin
@@ -99,3 +100,30 @@ class Update(LoginRequiredMixin, StaticContextMixin, generic.UpdateView):
         """Inform user."""
         messages.success(self.request, 'Changes Saved!')
         return super().form_valid(form)
+
+
+class Related(LoginRequiredMixin, generic.DetailView):
+
+    """View full list of <needle>-type objects related to this object."""
+
+    form_class, model = forms.Company, models.Company
+    template_name = 'inventory/raw.html'
+
+    def get_context_data(self, **kwargs):
+        """Provide custom render data to template."""
+        context = super().get_context_data(**kwargs)
+        needle = self.kwargs.get('needle', None)
+        if needle == 'Customers':
+            context['object_list'] = self.object.company_set.all()
+        elif needle == 'Domains':
+            context['object_list'] = self.object.domain_set.all()
+        elif needle == 'Applications':
+            context['object_list'] = self.object.application_set.all()
+        else:
+            raise Http404
+        context['page_title'] = '{0} related to {1}'.format(needle, self.object.name)
+        return context
+
+    def get_queryset(self):
+        """Show only objects linked to user's base company and customers of."""
+        return self.request.user.setting_set.get().companies

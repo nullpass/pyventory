@@ -1,6 +1,7 @@
 """Server views."""
 from django.views import generic
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
 from inventory import forms
@@ -14,9 +15,14 @@ class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
     form_class, model = forms.Server, models.Server
     template_name = 'inventory/form.html'
     static_context = {
-        'url_cancel': 'inventory:server:list',
         'page_title': 'Create server',
     }
+
+    def get_context_data(self, **kwargs):
+        """Provide custom render data to template."""
+        context = super().get_context_data(**kwargs)
+        context['href_cancel'] = reverse('inventory:server:list')
+        return context
 
     def get_form(self, form_class):
         """Limit fields to visible objects."""
@@ -37,8 +43,6 @@ class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
     form_class, model = forms.Server, models.Server
     template_name = 'inventory/detail.html'
     static_context = {
-        'url_cancel': 'inventory:server:list',
-        'url_edit': 'inventory:server:update',
         'page_title': 'Server:'
     }
 
@@ -46,6 +50,8 @@ class Detail(LoginRequiredMixin, StaticContextMixin, generic.DetailView):
         """Provide custom render data to template."""
         context = super().get_context_data(**kwargs)
         query = self.request.user.setting_set.get().servers
+        context['href_cancel'] = reverse('inventory:server:list')
+        context['href_edit'] = reverse('inventory:server:update', kwargs={'pk':self.object.pk})
         context['get_prev'], context['get_next'] = self.object.prev_and_next(query)
         context['recent'] = {
             'tickets': self.object.ticket_set.order_by('-modified')[:3].all()
@@ -65,8 +71,12 @@ class List(LoginRequiredMixin, StaticContextMixin, generic.ListView):
     template_name = 'inventory/list.html'
     static_context = {
         'page_title': 'Servers',
-        'url_create': 'inventory:server:create',
     }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['href_create'] = reverse('inventory:server:create')
+        return context
 
     def get_queryset(self):
         """Show only objects linked to user's base company and customers of."""
@@ -82,6 +92,11 @@ class Update(LoginRequiredMixin, StaticContextMixin, generic.UpdateView):
     static_context = {
         'page_title': 'Edit server:',
     }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['href_cancel'] = self.object.get_absolute_url()
+        return context
 
     def get_form(self, form_class):
         """Limit fields to visible objects."""

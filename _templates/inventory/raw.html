@@ -1,0 +1,10 @@
+<html>
+    <head>
+        <title>{{ page_title }}</title>
+    </head>
+    <body>
+        {% for this in object_list %}
+            <a href="{{ this.get_absolute_url }}">{{ this }}</a><br>
+        {% endfor %}
+    </body>
+</html>

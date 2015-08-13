@@ -4,6 +4,7 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 
 ### Next:
+* Inventory: finish converting url_ to href_ in views and templates.
 * Auth: (no 3pa yet) auth schemes and cascading ownership
 * Inventory: Keep updating QuerySets to restrict company scope
 * Tickets: put undo url in success message from unlink_related()
