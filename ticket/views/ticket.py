@@ -1,7 +1,7 @@
 """Ticket views."""
 from django.views import generic
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
 from ticket import models
