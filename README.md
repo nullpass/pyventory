@@ -4,8 +4,7 @@ Pyventory - A not-ready-for-prime-time Dj project.
 
 
 ### Next:
-* Auth: (no 3pa yet) auth schemes and cascading ownership
-* Inventory: Keep updating QuerySets to restrict company scope
+* Tickets: refactor numbering scheme now that domains are handled differently.
 * Tickets: put undo url in success message from unlink_related()
 * Tickets: add link-related form/view to accommodate linking tickets together since we cannot autolink tickets now.
 * Tickets: Changing the domain of a ticket should be its own view.  
@@ -19,7 +18,6 @@ Pyventory - A not-ready-for-prime-time Dj project.
 ### Deep thoughts by Jack Example:
 * The way domains are presented to attached objects needs some love. Simple bullet options may not work ideally but
  going the whole hand-holding-wizard route would be insulting to most prod users.
-* I hate the way the views.Sieze() works, need a diff approach. 
 * Current server.make_parent is so dumb, like really. Final version will rely on what users expect to see (if anything)
  when it fails.
 * Will upgrade to Dj 1.8 once [python-social-auth](https://github.com/omab/python-social-auth) is updated.

@@ -2,14 +2,13 @@
 
 {% block InventoryView %} active {% endblock %}
 
-{% block pagetitle %}inventory\index.html{% endblock pagetitle %}
-
 {% block content %}
     <ul>
         <li><a href="{% url 'inventory:server:list' %}">Servers</a></li>
         <li><a href="{% url 'inventory:domain:list' %}">Domains</a></li>
         <li><a href="{% url 'inventory:application:list' %}">Applications</a></li>
         <li><a href="{% url 'inventory:company:list' %}">Companies</a></li>
+        <li><a href="{% url 'inventory:department:list' %}">Departments</a></li>
     </ul>
-    <pre>Some long-winded explination about the Zen of Servers and how we're all lucky and how back in your day...</pre>
+    <pre>Some long-winded explanation about the Zen of Servers and how we're all lucky and how back in your day...</pre>
 {% endblock %}

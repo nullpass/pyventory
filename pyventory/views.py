@@ -26,7 +26,6 @@ Polaroid gastropub Portland, actually direct trade shabby chic literally farm-to
 def notify(self, this):
     """Show success message."""
     msg = '{0} - Added: {1}'.format(
-        # time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()),
         time.strftime('%c', time.gmtime()),
         this.objects.all()
     )
