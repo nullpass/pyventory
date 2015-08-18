@@ -8,11 +8,9 @@ Pyventory - A not-ready-for-prime-time Dj project.
 * Tickets: put undo url in success message from unlink_related()
 * Tickets: add link-related form/view to accommodate linking tickets together since we cannot autolink tickets now.
 * Tickets: Changing the domain of a ticket should be its own view.  
-* All: Add flat/original/raw views to Detail to view an object without html
 * Inventory: Set up view for servers<->applications
 * Logging: start adding hooks
 * All: orphan finders
-* Inventory: Add related-object full listing views. 
 
 
 ### Deep thoughts by Jack Example:
