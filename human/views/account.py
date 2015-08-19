@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from braces.views import AnonymousRequiredMixin, SSLRequiredMixin
+from braces.views import AnonymousRequiredMixin, SSLRequiredMixin, LoginRequiredMixin
 
 from human import models
 
@@ -35,7 +35,7 @@ class Login(SSLRequiredMixin, AnonymousRequiredMixin, generic.FormView):
         return super().form_invalid(form)
 
 
-class Logout(generic.RedirectView):
+class Logout(LoginRequiredMixin, generic.RedirectView):
     """Blindly log out any request that hits this url with a GET."""
     url = reverse_lazy('home')
 
