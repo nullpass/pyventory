@@ -98,7 +98,6 @@ class Domain(UltraModel):
     name = models.CharField(
         validators=[RegexValidator('^[a-zA-Z][\-0-9a-z\.]+$')],
         max_length=254,
-        unique=True,
         help_text='example: "prod.va.us.my-company.tld"',
     )
     company = models.ForeignKey(Company, null=True, on_delete=models.SET_NULL)
@@ -106,6 +105,9 @@ class Domain(UltraModel):
         verbose_name='SLA Policy',
         help_text='Briefly explain the up-time expectations of machines and applications in this domain.',
     )
+
+    class Meta:
+        unique_together = (("name", "company"),)
 
     def get_absolute_url(self):
         """The Detail View URL of object."""
@@ -141,7 +143,6 @@ class Application(UltraModel):
     """
 
     name = models.CharField(max_length=1024,
-                            unique=True,
                             help_text='FQDN of the app',
                             )
     company = models.ForeignKey(Company, default=None, null=True, on_delete=models.SET_NULL)
@@ -150,6 +151,8 @@ class Application(UltraModel):
                                      help_text='Allow tickets to automatically link to this object when referenced.',
                                      )
 
+    class Meta:
+        unique_together = (("name", "company"),)
 
     def get_absolute_url(self):
         """The Detail View URL of object."""

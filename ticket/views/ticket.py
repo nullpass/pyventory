@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
-from ticket import models
-from ticket import forms
+from .. import models
+from .. import forms
 
 
 class Index(LoginRequiredMixin, StaticContextMixin, generic.ListView):

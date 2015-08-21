@@ -44,7 +44,7 @@ class Ticket(UltraModel):
         related_tickets: Other Tickets related to this object.
         applications: inventory.Application objects that this Ticket references. Automatically updated.
         needs_approval: Change-Control hook, bool, does work in this Ticket need approval before it starts?
-        is_approved: Wether the requested changes is/are allowed to be done.
+        is_approved: Whether the requested changes is/are allowed to be done.
         department: Determines who can see/own the ticket. Also used as a person's ticket queue.
 
     """

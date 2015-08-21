@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin, StaticContextMixin
 
-from inventory import forms
-from inventory import models
+from .. import forms
+from .. import models
 
 
 class Create(LoginRequiredMixin, StaticContextMixin, generic.CreateView):
