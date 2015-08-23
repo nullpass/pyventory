@@ -14,20 +14,32 @@ from inventory.models import Server, Domain, Application, Department
 def link_related(ticket, body):
     """Find and automatically link servers if object names are mentioned in {body}.
 
-    Will only link objects in same ticket.domain.
+    Will only link inventory objects in same ticket.domain,
+    and will only link tickets in the same company
     """
+    company = ticket.domain.company
     separator = '[,:\. <>\[\];\r\n]+'
     body = body[:16384]  # Limit haystack size (sometimes users paste huge logs to ticket)
     paragraph = re.split(separator, body)
+    # Link related servers.
     servers = Server.objects.filter(domain=ticket.domain).values_list('name', flat=True)
     for word in paragraph:
         if word in servers:
             ticket.servers.add(Server.objects.get(domain=ticket.domain, name=word))
+    # Link related applications.
     words = body.replace('\r', ' ').replace('\n', ' ').split(' ')
-    applications = Application.objects.filter(company=ticket.domain.company).values_list('name', flat=True)
+    applications = Application.objects.filter(company=company).values_list('name', flat=True)
     for this in words:
         if this in applications:
-            ticket.applications.add(Application.objects.get(company=ticket.domain.company, name=this))
+            ticket.applications.add(Application.objects.get(company=company, name=this))
+    # Link related tickets.
+    foo = re.findall('ticket#([0-9]+)',body)
+    domains = Domain.objects.filter(company=company)
+    for this in foo:
+        try:
+            ticket.related_tickets.add(Ticket.objects.exclude(pk=ticket.pk).get(pk=this, domain=domains))
+        except Ticket.DoesNotExist:
+            pass
 
 
 class Ticket(UltraModel):
